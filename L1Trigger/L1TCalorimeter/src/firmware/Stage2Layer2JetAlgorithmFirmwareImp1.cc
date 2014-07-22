@@ -36,27 +36,31 @@ void l1t::Stage2Layer2JetAlgorithmFirmwareImp1::processEvent(const std::vector<l
 
 
   // find all possible jets
-  create(towers, jets, (params_->jetPUSType()=="Donut"));
+  //std::cout << "Just making jets, towers size" << towers.size() << std::endl;
+  if(towers.size()>0){
+    create(towers, jets, (params_->jetPUSType()=="Donut"));
 
-  // remove overlaps
-  filter(jets);
+    //if(params_->jetPUSType()=="Donut") std::cout << "Doing donut" << std::endl;
 
-  // sort
-  sort(jets);
+    // remove overlaps
+    filter(jets);
 
+    // sort
+    sort(jets);
+  }
 }
 
 
 void l1t::Stage2Layer2JetAlgorithmFirmwareImp1::create(const std::vector<l1t::CaloTower> & towers,
-      std::vector<l1t::Jet> & jets, bool doDonutSubtraction) {
+    std::vector<l1t::Jet> & jets, bool doDonutSubtraction) {
 
   //Declare the range to carry out the algorithm over
   int etaMax=28, etaMin=-28, phiMax=72, phiMin=1;
 
-   // generate jet mask
-   // needs to be configurable at some point
-   // just a square for now
-   // for 1 do greater than, for 2 do greater than equal to
+  // generate jet mask
+  // needs to be configurable at some point
+  // just a square for now
+  // for 1 do greater than, for 2 do greater than equal to
   int mask[9][9] = {
     { 1,1,1,1,1,1,1,1,1 },
     { 2,1,1,1,1,1,1,1,1 },
@@ -76,11 +80,14 @@ void l1t::Stage2Layer2JetAlgorithmFirmwareImp1::create(const std::vector<l1t::Ca
     for ( int iphi = phiMin ; iphi < phiMax+1 ; ++iphi ) {
 
       const CaloTower& tow = CaloTools::getTower(towers, ieta, iphi); 
-      int seedEt = tow.hwEtEm();
-      seedEt += tow.hwEtHad();
+      // int seedEt = tow.hwEtEm();
+      // seedEt += tow.hwEtHad();
 
+      int seedEt=tow.hwPt();
       int iEt(seedEt);
       bool vetoCandidate(false);
+
+      //if(seedEt>0) std::cout << seedEt << '\t' << ieta << '\t' << iphi << '\t' << std::endl;
 
       //Check it passes the seed threshold
       if(iEt < floor(params_->jetSeedThreshold()/params_->towerLsbSum())) continue;
@@ -106,7 +113,8 @@ void l1t::Stage2Layer2JetAlgorithmFirmwareImp1::create(const std::vector<l1t::Ca
           if( mask[deta+4][dphi+4] == 1 ) { //Do greater than
             if(ietaTest <= etaMax && ietaTest >= etaMin){ //Only check if in the eta range
               const CaloTower& tow = CaloTools::getTower(towers, ietaTest, iphiTest); 
-              towEt = tow.hwEtEm() + tow.hwEtHad();
+              //towEt = tow.hwEtEm() + tow.hwEtHad();
+              towEt = tow.hwPt();
               iEt+=towEt;
             }
             vetoCandidate=(seedEt<towEt);
@@ -114,7 +122,8 @@ void l1t::Stage2Layer2JetAlgorithmFirmwareImp1::create(const std::vector<l1t::Ca
           else if( mask[deta+4][dphi+4] == 2 ) { //Do greater than equal to
             if(ietaTest <= etaMax && ietaTest >= etaMin){ //Only check if in the eta range
               const CaloTower& tow = CaloTools::getTower(towers, ietaTest, iphiTest); 
-              int towEt = tow.hwEtEm() + tow.hwEtHad();
+              //int towEt = tow.hwEtEm() + tow.hwEtHad();
+              towEt = tow.hwPt();
               iEt+=towEt;
             }
             vetoCandidate=(seedEt<=towEt);
@@ -127,7 +136,7 @@ void l1t::Stage2Layer2JetAlgorithmFirmwareImp1::create(const std::vector<l1t::Ca
       // add the jet to the list
       if (!vetoCandidate) {
         math::XYZTLorentzVector p4;
-        
+
         //If doing donut PUS find the outer ring around the jet
         if(doDonutSubtraction){
           std::vector<int> ring;

@@ -159,10 +159,10 @@ import L1Trigger.L1TCalorimeter.l1tStage2CaloAnalyzer_cfi
 process.rawPlots = L1Trigger.L1TCalorimeter.l1tStage2CaloAnalyzer_cfi.l1tStage2CaloAnalyzer.clone()
 process.rawPlots.towerToken = cms.InputTag("l1tDigis")
 process.rawPlots.clusterToken = cms.InputTag("None")
-process.rawPlots.egToken = cms.InputTag("l1tDigis")
-process.rawPlots.tauToken = cms.InputTag("l1tDigis")
-process.rawPlots.jetToken = cms.InputTag("l1tDigis")
-process.rawPlots.etSumToken = cms.InputTag("l1tDigis")
+process.rawPlots.egToken = cms.InputTag("None")
+process.rawPlots.tauToken = cms.InputTag("None")
+process.rawPlots.jetToken = cms.InputTag("None")
+process.rawPlots.etSumToken = cms.InputTag("None")
 
 # plots from emulator
 process.simPlots = L1Trigger.L1TCalorimeter.l1tStage2CaloAnalyzer_cfi.l1tStage2CaloAnalyzer.clone()
