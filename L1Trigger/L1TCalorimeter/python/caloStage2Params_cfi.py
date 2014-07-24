@@ -56,7 +56,7 @@ caloStage2Params.tauCalibrationLUTFileEta      = cms.FileInPath("L1Trigger/L1TCa
 caloStage2Params.jetLsb                = cms.double(0.5)
 caloStage2Params.jetSeedThreshold      = cms.double(0.)
 caloStage2Params.jetNeighbourThreshold = cms.double(0.)
-caloStage2Params.jetPUSType            = cms.string("None")
+caloStage2Params.jetPUSType            = cms.string("Donut")
 caloStage2Params.jetCalibrationType    = cms.string("None")
 caloStage2Params.jetCalibrationParams  = cms.vdouble()
 

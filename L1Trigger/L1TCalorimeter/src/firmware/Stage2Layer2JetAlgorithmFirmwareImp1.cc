@@ -38,9 +38,10 @@ void l1t::Stage2Layer2JetAlgorithmFirmwareImp1::processEvent(const std::vector<l
   // find all possible jets
   //std::cout << "Just making jets, towers size" << towers.size() << std::endl;
   if(towers.size()>0){
-    create(towers, jets, (params_->jetPUSType()=="Donut"));
 
-    //if(params_->jetPUSType()=="Donut") std::cout << "Doing donut" << std::endl;
+    if(params_->jetPUSType()=="Donut") std::cout << "Doing donut" << std::endl;
+
+    create(towers, jets, (params_->jetPUSType()=="Donut"));
 
     // remove overlaps
     filter(jets);
@@ -181,10 +182,12 @@ void l1t::Stage2Layer2JetAlgorithmFirmwareImp1::pusRing(int jetEta, int jetPhi, 
   {
     if (ieta > etaMax || ieta < etaMin) continue;
     const CaloTower& tow = CaloTools::getTower(towers, ieta, iphiUp);
-    int towEt = tow.hwEtEm() + tow.hwEtHad();
+    //int towEt = tow.hwEtEm() + tow.hwEtHad();
+    int towEt = tow.hwPt();
     ring[0]+=towEt;
     const CaloTower& tow2 = CaloTools::getTower(towers, ieta, iphiDown);
-    towEt = tow2.hwEtEm() + tow2.hwEtHad();
+    //towEt = tow2.hwEtEm() + tow2.hwEtHad();
+    towEt = tow2.hwPt();
     ring[1]+=towEt;
   } 
   for (int iphi = jetPhi - size+1; iphi != jetPhi + size; ++iphi)   
@@ -204,10 +207,12 @@ void l1t::Stage2Layer2JetAlgorithmFirmwareImp1::pusRing(int jetEta, int jetPhi, 
     }
     //if (ieta > etaMax || ieta < etaMin) continue;
     const CaloTower& tow = CaloTools::getTower(towers, ietaUp, towerPhi);
-    int towEt = tow.hwEtEm() + tow.hwEtHad();
+    //int towEt = tow.hwEtEm() + tow.hwEtHad();
+    int towEt = tow.hwPt();
     ring[2]+=towEt;
     const CaloTower& tow2 = CaloTools::getTower(towers, ietaDown, towerPhi);
-    towEt = tow2.hwEtEm() + tow2.hwEtHad();
+    //towEt = tow2.hwEtEm() + tow2.hwEtHad();
+    towEt = tow2.hwPt();
     ring[3]+=towEt;
   } 
 

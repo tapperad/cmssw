@@ -196,7 +196,7 @@ process.path = cms.Path(
     +process.caloStage2Digis
 
     # diagnostics
-    +process.dumpRaw
+    #+process.dumpRaw
     +process.rawPlots
     +process.simPlots
 )
