@@ -11,21 +11,38 @@ void compHwEmu(){
 
   TCanvas* c1 = new TCanvas("c1","");
 
+  TLegend* leg = new TLegend(0.6,0.6,0.8,0.8);
+  leg->SetFillColor(0);
+  leg->AddEntry(rawEt,"Firmware", "l");
+  leg->AddEntry(emuEt,"Emulator", "p");
+
   c1->cd();
 
   rawEt->GetXaxis()->SetTitle("jet Et");
   emuEt->Draw("p");
   rawEt->Draw("same");
-
+  leg->Draw();
   c1->SaveAs("jetEt.png");
   
+  TLegend* leg = new TLegend(0.6,0.6,0.8,0.8);
+  leg->SetFillColor(0);
+  leg->AddEntry(rawEta,"Firmware", "l");
+  leg->AddEntry(emuEta,"Emulator", "p");
+
   rawEta->GetXaxis()->SetTitle("jet iEta");
   emuEta->Draw("p");
   rawEta->Draw("same");
+  leg->Draw();
   c1->SaveAs("jetEta.png");
+
+  TLegend* leg = new TLegend(0.6,0.6,0.8,0.8);
+  leg->SetFillColor(0);
+  leg->AddEntry(rawPhi,"Firmware", "l");
+  leg->AddEntry(emuPhi,"Emulator", "p");
 
   rawPhi->GetXaxis()->SetTitle("jet iPhi");
   emuPhi->Draw("p");
   rawPhi->Draw("same");
+  leg->Draw();
   c1->SaveAs("jetPhi.png");
 }

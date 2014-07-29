@@ -58,6 +58,8 @@ void l1t::Stage2Layer2JetAlgorithmFirmwareImp1::create(const std::vector<l1t::Ca
   //Declare the range to carry out the algorithm over
   int etaMax=28, etaMin=-28, phiMax=72, phiMin=1;
 
+  bool fwErrors=true;//Reproduce the known problems in firmware
+
   // generate jet mask
   // needs to be configurable at some point
   // just a square for now
@@ -146,13 +148,28 @@ void l1t::Stage2Layer2JetAlgorithmFirmwareImp1::create(const std::vector<l1t::Ca
 
           //Using 2 strips with 9 towers for the subtraction
           //Need to scale it up to the jet size, ie 81/18 = 4.5
-          int donutEt = 4.5*( ring[1]+ring[2] );
+          int donutEt;
+          if(fwErrors) donutEt= 4.*( ring[1]+ring[2] );
+          else donutEt=4.5*( ring[1]+ring[2] );
 
           iEt-=donutEt;
         }
 
         if(iEt>0){
-          l1t::Jet jet( p4, iEt, ieta, iphi, 0);
+          int jetPhi,jetEta;
+          if(fwErrors){ 
+            if(iphi<6){
+              jetPhi=72-(5-iphi);
+            }else{
+              jetPhi=iphi-5;
+            }
+            jetEta=ieta-1;
+            //if(firstEvent==true) jetEta=ieta-1;
+          }else{
+            jetPhi=iphi;
+            jetEta=ieta;
+          }
+          l1t::Jet jet( p4, iEt, jetEta, jetPhi, 0);
           jets.push_back( jet );
         }
       }
