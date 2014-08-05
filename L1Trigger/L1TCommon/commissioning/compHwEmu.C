@@ -22,7 +22,7 @@ void compHwEmu(){
   emuEt->Draw("p");
   rawEt->Draw("same");
   leg->Draw();
-  c1->SaveAs("jetEt.png");
+  c1->SaveAs("jetEt.root");
   
   TLegend* leg = new TLegend(0.6,0.6,0.8,0.8);
   leg->SetFillColor(0);
@@ -33,7 +33,7 @@ void compHwEmu(){
   emuEta->Draw("p");
   rawEta->Draw("same");
   leg->Draw();
-  c1->SaveAs("jetEta.png");
+  c1->SaveAs("jetEta.root");
 
   TLegend* leg = new TLegend(0.6,0.6,0.8,0.8);
   leg->SetFillColor(0);
@@ -44,5 +44,5 @@ void compHwEmu(){
   emuPhi->Draw("p");
   rawPhi->Draw("same");
   leg->Draw();
-  c1->SaveAs("jetPhi.png");
+  c1->SaveAs("jetPhi.root");
 }

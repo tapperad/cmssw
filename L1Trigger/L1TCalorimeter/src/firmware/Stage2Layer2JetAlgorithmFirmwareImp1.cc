@@ -58,7 +58,7 @@ void l1t::Stage2Layer2JetAlgorithmFirmwareImp1::create(const std::vector<l1t::Ca
   //Declare the range to carry out the algorithm over
   int etaMax=28, etaMin=-28, phiMax=72, phiMin=1;
 
-  bool fwErrors=true;//Reproduce the known problems in firmware
+  bool fwErrors=false;//Reproduce the known problems in firmware
 
   // generate jet mask
   // needs to be configurable at some point
@@ -163,7 +163,7 @@ void l1t::Stage2Layer2JetAlgorithmFirmwareImp1::create(const std::vector<l1t::Ca
             }else{
               jetPhi=iphi-5;
             }
-            jetEta=ieta-1;
+            jetEta=ieta;
             //if(firstEvent==true) jetEta=ieta-1;
           }else{
             jetPhi=iphi;
