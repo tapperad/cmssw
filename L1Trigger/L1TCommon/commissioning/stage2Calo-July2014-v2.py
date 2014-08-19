@@ -22,10 +22,11 @@ process.maxEvents = cms.untracked.PSet(
 )
 
 # Input source
-process.source = cms.Source("EmptySource")
+process.source = cms.Source("EmptySource",
+  #skipEvents=cms.untracked.uint32(0)
+    )
 
 process.options = cms.untracked.PSet(
-
 )
 
 
@@ -74,10 +75,16 @@ process.stage2Layer2Raw.fedId           = cms.untracked.int32(2)
 process.stage2Layer2Raw.rxFile          = cms.untracked.string("rx_summary.txt")
 process.stage2Layer2Raw.txFile          = cms.untracked.string("tx_summary.txt")
 process.stage2Layer2Raw.nFramesPerEvent = cms.untracked.int32(54)
-process.stage2Layer2Raw.txLatency       = cms.untracked.int32(54)
+#process.stage2Layer2Raw.txLatency       = cms.untracked.int32(54)
+#process.stage2Layer2Raw.txLatency       = cms.untracked.int32(87) # For the two towers
+#process.stage2Layer2Raw.txLatency       = cms.untracked.int32(59) # For the pi0 half eta
+process.stage2Layer2Raw.txLatency       = cms.untracked.int32(39) # For the ttbar
+#process.stage2Layer2Raw.txLatency       = cms.untracked.int32(87)
 process.stage2Layer2Raw.nRxEventHeaders = cms.untracked.int32(1)
+#process.stage2Layer2Raw.nTxEventHeaders = cms.untracked.int32(1) # For ttbar, get more jets
 process.stage2Layer2Raw.nTxEventHeaders = cms.untracked.int32(0)
-process.stage2Layer2Raw.rxBlockLength   = cms.untracked.vint32(
+
+process.stage2Layer2Raw.rxBlockLength   = cms.untracked.vint32( # Has to be 40, one missing
     40,0,40,0,40,0,40,0,40,
     0,40,0,40,0,40,0,40,0,
     40,0,40,0,40,0,40,0,40,
@@ -87,8 +94,21 @@ process.stage2Layer2Raw.rxBlockLength   = cms.untracked.vint32(
     40,0,40,0,40,0,40,0,40,
     0,40,0,40,0,40,0,40,0)
 
+#process.stage2Layer2Raw.rxBlockLength   = cms.untracked.vint32(
+#    41,0,41,0,41,0,41,0,41,
+#    0,41,0,41,0,41,0,41,0,
+#    41,0,41,0,41,0,41,0,41,
+#    0,41,0,41,0,41,0,41,0,
+#    41,0,41,0,41,0,41,0,41,
+#    0,41,0,41,0,41,0,41,0,
+#    41,0,41,0,41,0,41,0,41,
+#    0,41,0,41,0,41,0,41,0)
+
+
 process.stage2Layer2Raw.txBlockLength   = cms.untracked.vint32(
-    39,39,39,39,39,39,0,0,0,
+    #37,37,37,37,37,37,0,0,0, # reduced to 37 from 39 for some reason won't make jets otherwise
+    #39,39,39,39,39,39,0,0,0,
+    38,38,38,38,38,38,0,0,0,
     0,0,0,0,0,0,0,0,0,
     0,0,0,0,0,0,0,0,0,
     0,0,0,0,0,0,0,0,0,
@@ -212,7 +232,7 @@ process.path = cms.Path(
     +process.caloStage2Digis
 
     # diagnostics
-    +process.dumpRaw
+    #+process.dumpRaw
     +process.rawPlots
     +process.simPlots
 )

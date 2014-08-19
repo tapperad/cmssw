@@ -82,6 +82,10 @@ void l1t::Stage2Layer2EtSumAlgorithmFirmwareImp1::processEvent(const std::vector
    missingEt = missingEt & 0xfff;
    totalEt = totalEt & 0xfff;
 
+   std::cout << "Et: "  << totalEt << std::endl;
+   std::cout << "MetX: "  << missingEt*cos(phiMissingEt) << std::endl;
+   std::cout << "MetY: "  << missingEt*sin(phiMissingEt) << std::endl;
+
    l1t::EtSum::EtSumType typeTotalEt = l1t::EtSum::EtSumType::kTotalEt;
    l1t::EtSum::EtSumType typeMissingEt = l1t::EtSum::EtSumType::kMissingEt;
 

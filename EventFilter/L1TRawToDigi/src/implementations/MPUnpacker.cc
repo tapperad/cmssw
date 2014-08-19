@@ -74,6 +74,7 @@ namespace l1t {
 
      // Skip 9 empty frames
      for (int j=0; j<9; j++) raw_data=pop(data,i); 
+     //for (int j=0; j<8; j++) raw_data=pop(data,i); 
 
      // HT / MHT(x)/ MHT (y)
 
@@ -89,7 +90,8 @@ namespace l1t {
      res2_->push_back(0,ht);
 
      // Skip 26 empty frames                                                                                                                                             
-     for (int j=0; j<26; j++) raw_data=pop(data,i);
+     //for (int j=0; j<26; j++) raw_data=pop(data,i);
+     for (int j=0; j<25; j++) raw_data=pop(data,i);
 
      // Two jets
      for (unsigned nJet=0; nJet < 2; nJet++){
