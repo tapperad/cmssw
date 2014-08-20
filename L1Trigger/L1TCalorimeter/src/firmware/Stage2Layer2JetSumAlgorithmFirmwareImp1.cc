@@ -82,6 +82,10 @@ void l1t::Stage2Layer2JetSumAlgorithmFirmwareImp1::processEvent(const std::vecto
    missingHt = missingHt & 0xfff;
    totalHt = totalHt & 0xfff;
 
+   std::cout << "Ht: "  << totalHt << std::endl;
+   std::cout << "MhtX: "  << missingHt*cos(phiMissingHt) << std::endl;
+   std::cout << "MhtY: "  << missingHt*sin(phiMissingHt) << std::endl;
+
    l1t::EtSum::EtSumType typeTotalHt = l1t::EtSum::EtSumType::kTotalHt;
    l1t::EtSum::EtSumType typeMissingHt = l1t::EtSum::EtSumType::kMissingHt;
 

@@ -158,19 +158,24 @@ void l1t::Stage2Layer2JetAlgorithmFirmwareImp1::create(const std::vector<l1t::Ca
         if(iEt>0){
           int jetPhi,jetEta;
           if(fwErrors){ 
-            if(iphi<6){
-              jetPhi=72-(5-iphi);
-            }else{
-              jetPhi=iphi-5;
-            }
-            jetEta=ieta;
+            //if(iphi<6){
+            //  jetPhi=72-(5-iphi);
+            //}else{
+            //  jetPhi=iphi-5;
+            //}
+            jetPhi=iphi;
+            jetEta=ieta-3;
             //if(firstEvent==true) jetEta=ieta-1;
           }else{
             jetPhi=iphi;
             jetEta=ieta;
           }
           l1t::Jet jet( p4, iEt, jetEta, jetPhi, 0);
-          jets.push_back( jet );
+          if(fwErrors){
+            if(ieta>4)  jets.push_back( jet );
+          }else{
+            jets.push_back( jet );
+          }
         }
       }
 
@@ -247,7 +252,8 @@ void l1t::Stage2Layer2JetAlgorithmFirmwareImp1::filter(std::vector<l1t::Jet> & j
 
 void l1t::Stage2Layer2JetAlgorithmFirmwareImp1::sort(std::vector<l1t::Jet> & jets) {
 
-  // do nothing for now!
+  // sort the jets and return only the top 6 from each hemisphere
+
 
 }
 
