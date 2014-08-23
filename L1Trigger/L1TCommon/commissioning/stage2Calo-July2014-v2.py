@@ -18,7 +18,7 @@ process.load('Configuration.StandardSequences.EndOfProcess_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
 process.maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32(1)
+    input = cms.untracked.int32(-1)
 )
 
 # Input source
@@ -74,13 +74,14 @@ process.stage2Layer2Raw = EventFilter.L1TRawToDigi.mp7BufferDumpToRaw_cfi.mp7Buf
 process.stage2Layer2Raw.fedId           = cms.untracked.int32(2)
 process.stage2Layer2Raw.rxFile          = cms.untracked.string("rx_summary.txt")
 process.stage2Layer2Raw.txFile          = cms.untracked.string("tx_summary.txt")
-process.stage2Layer2Raw.nFramesPerEvent = cms.untracked.int32(54)
+#process.stage2Layer2Raw.nFramesPerEvent = cms.untracked.int32(54)
+process.stage2Layer2Raw.nFramesPerEvent = cms.untracked.int32(40)
 #process.stage2Layer2Raw.txLatency       = cms.untracked.int32(54)
 #process.stage2Layer2Raw.txLatency       = cms.untracked.int32(87) # For the two towers
-#process.stage2Layer2Raw.txLatency       = cms.untracked.int32(59) # For the pi0 half eta
-process.stage2Layer2Raw.txLatency       = cms.untracked.int32(39) # For the ttbar
+process.stage2Layer2Raw.txLatency       = cms.untracked.int32(59) # For the pi0 half eta
+#process.stage2Layer2Raw.txLatency       = cms.untracked.int32(3) # For the ttbar
 #process.stage2Layer2Raw.txLatency       = cms.untracked.int32(87)
-process.stage2Layer2Raw.nRxEventHeaders = cms.untracked.int32(1)
+process.stage2Layer2Raw.nRxEventHeaders = cms.untracked.int32(0)
 #process.stage2Layer2Raw.nTxEventHeaders = cms.untracked.int32(1) # For ttbar, get more jets
 process.stage2Layer2Raw.nTxEventHeaders = cms.untracked.int32(0)
 

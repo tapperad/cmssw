@@ -17,6 +17,10 @@
 #include <vector>
 #include <algorithm>
 
+namespace{
+  bool sortbypt(const l1t::Jet &a, const l1t::Jet &b) { return a.hwPt() > b.hwPt(); };
+}
+
 l1t::Stage2Layer2JetAlgorithmFirmwareImp1::Stage2Layer2JetAlgorithmFirmwareImp1(CaloParams* params) :
   params_(params)
 {
@@ -39,7 +43,7 @@ void l1t::Stage2Layer2JetAlgorithmFirmwareImp1::processEvent(const std::vector<l
   //std::cout << "Just making jets, towers size" << towers.size() << std::endl;
   if(towers.size()>0){
 
-    if(params_->jetPUSType()=="Donut") std::cout << "Doing donut" << std::endl;
+    //if(params_->jetPUSType()=="Donut") std::cout << "Doing donut" << std::endl;
 
     create(towers, jets, (params_->jetPUSType()=="Donut"));
 
@@ -66,13 +70,13 @@ void l1t::Stage2Layer2JetAlgorithmFirmwareImp1::create(const std::vector<l1t::Ca
   // for 1 do greater than, for 2 do greater than equal to
   int mask[9][9] = {
     { 1,1,1,1,1,1,1,1,1 },
-    { 2,1,1,1,1,1,1,1,1 },
-    { 2,2,1,1,1,1,1,1,1 },
-    { 2,2,2,1,1,1,1,1,1 },
-    { 2,2,2,2,0,1,1,1,1 },
-    { 2,2,2,2,2,2,1,1,1 },
-    { 2,2,2,2,2,2,2,1,1 },
-    { 2,2,2,2,2,2,2,2,1 },
+    { 1,1,1,1,1,1,1,1,2 },
+    { 1,1,1,1,1,1,1,2,2 },
+    { 1,1,1,1,1,1,2,2,2 },
+    { 1,1,1,1,0,2,2,2,2 },
+    { 1,1,1,2,2,2,2,2,2 },
+    { 1,1,2,2,2,2,2,2,2 },
+    { 1,2,2,2,2,2,2,2,2 },
     { 2,2,2,2,2,2,2,2,2 }
   };
 
@@ -253,8 +257,13 @@ void l1t::Stage2Layer2JetAlgorithmFirmwareImp1::filter(std::vector<l1t::Jet> & j
 void l1t::Stage2Layer2JetAlgorithmFirmwareImp1::sort(std::vector<l1t::Jet> & jets) {
 
   // sort the jets and return only the top 6 from each hemisphere
-
-
+  std::sort(jets.begin(), jets.end(), sortbypt);
+/*
+  //Return only the lead 6 jets
+  if(jets.size()>6){
+    for(int i=0; i<(int)jets.size()-6; i++) jets.pop_back();
+  }
+*/
 }
 
 // remove jets with zero et

@@ -110,6 +110,10 @@ namespace l1t {
       std::map< ObjectType, TH1F* > hht1_;
       std::map< ObjectType, TH1F* > hht2_;
       std::map< ObjectType, TH1F* > hht3_;
+      std::map< ObjectType, TH1F* > hmet_;
+      std::map< ObjectType, TH1F* > hmetphi_;
+      std::map< ObjectType, TH1F* > hmht_;
+      std::map< ObjectType, TH1F* > hmhtphi_;
 
   };
 
@@ -313,6 +317,7 @@ namespace l1t {
         Handle< BXVector<l1t::EtSum> > sums;
         iEvent.getByToken(m_sumToken,sums);
 
+        double metX=0., metY=0., mhtX=0., mhtY=0.;
         for ( int ibx=sums->getFirstBX(); ibx<=sums->getLastBX(); ++ibx) {
 
           if (ibx>-6 && ibx<6) {
@@ -329,23 +334,35 @@ namespace l1t {
             //Convert the bit string to a signed int
             int actualPt = ( static_cast<int>( itr->hwPt()<<12 ) >> 12 );
 
-              if(itr->getType() == l1t::EtSum::EtSumType::kTotalEt || itr->getType() == l1t::EtSum::EtSumType::kMissingEt
-                  || itr->getType() == l1t::EtSum::EtSumType::kTotalEx || itr->getType() == l1t::EtSum::EtSumType::kTotalEy){
+            if(itr->getType() == l1t::EtSum::EtSumType::kTotalEt || itr->getType() == l1t::EtSum::EtSumType::kMissingEt
+                || itr->getType() == l1t::EtSum::EtSumType::kTotalEx || itr->getType() == l1t::EtSum::EtSumType::kTotalEy){
 
 
-                if(i==0) het_.at(Sum)->Fill( actualPt );
-                else if(i==1) het1_.at(Sum)->Fill( actualPt );
-                else if(i==2) het2_.at(Sum)->Fill( actualPt );
-                else if(i==3) het3_.at(Sum)->Fill( actualPt );
-
-                i++;
+              if(i==0) het_.at(Sum)->Fill( actualPt );
+              else if(i==1){
+                het1_.at(Sum)->Fill( actualPt );
+                metX+=actualPt;
               }
+              else if(i==2){
+                het2_.at(Sum)->Fill( actualPt );
+                metY+=actualPt;
+              }
+              else if(i==3) het3_.at(Sum)->Fill( actualPt );
+
+              i++;
+            }
 
             if(itr->getType() == l1t::EtSum::EtSumType::kTotalHt || itr->getType() == l1t::EtSum::EtSumType::kMissingHt){
 
               if(j==0) hht_.at(Sum)->Fill( actualPt );
-              else if(j==1) hht1_.at(Sum)->Fill( actualPt );
-              else if(j==2) hht2_.at(Sum)->Fill( actualPt );
+              else if(j==1){
+                hht1_.at(Sum)->Fill( actualPt );
+                mhtX=actualPt;
+              }
+              else if(j==2){
+                hht2_.at(Sum)->Fill( actualPt );
+                mhtY=actualPt;
+              }
               else if(j==3) hht3_.at(Sum)->Fill( actualPt );
 
               j++;
@@ -365,8 +382,11 @@ namespace l1t {
                */
 
           }
-
         }
+        hmet_.at(Sum)->Fill(sqrt(metX*metX+metY*metY));
+        hmetphi_.at(Sum)->Fill(atan2(metY,metX));
+        hmht_.at(Sum)->Fill(sqrt(mhtX*mhtX+mhtY*mhtY));
+        hmhtphi_.at(Sum)->Fill(atan2(mhtY,mhtX));
 
       }
 
@@ -407,6 +427,11 @@ namespace l1t {
           hht1_.insert( std::pair< ObjectType, TH1F* >(*itr, dirs_.at(*itr).make<TH1F>("ht1", "", 501, -250.5, 250.5) ));
           hht2_.insert( std::pair< ObjectType, TH1F* >(*itr, dirs_.at(*itr).make<TH1F>("ht2", "", 501, -250.5, 250.5) ));
           hht3_.insert( std::pair< ObjectType, TH1F* >(*itr, dirs_.at(*itr).make<TH1F>("ht3", "", 501, -250.5, 250.5) ));
+
+          hmht_.insert( std::pair< ObjectType, TH1F* >(*itr, dirs_.at(*itr).make<TH1F>("mht", "", 501, -0.5, 500.5) ));
+          hmet_.insert( std::pair< ObjectType, TH1F* >(*itr, dirs_.at(*itr).make<TH1F>("met", "", 501, -0.5, 500.5) ));
+          hmhtphi_.insert( std::pair< ObjectType, TH1F* >(*itr, dirs_.at(*itr).make<TH1F>("mhtphi", "", 73, -3.2, 3.2) ));
+          hmetphi_.insert( std::pair< ObjectType, TH1F* >(*itr, dirs_.at(*itr).make<TH1F>("metphi", "", 73, -3.2, 3.2) ));
         }
 
       }
