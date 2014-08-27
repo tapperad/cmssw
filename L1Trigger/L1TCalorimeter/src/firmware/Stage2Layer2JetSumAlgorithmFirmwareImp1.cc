@@ -49,22 +49,22 @@ void l1t::Stage2Layer2JetSumAlgorithmFirmwareImp1::processEvent(const std::vecto
 
    for(size_t jetNr=0;jetNr<jets.size();jetNr++)
    {
-	 ptJet = (jets[jetNr]).hwPt();
-      if ((jets[jetNr]).hwEta() > etSumEtaMinMet_ && (jets[jetNr]).hwEta() < etSumEtaMaxMet_ && (jets[jetNr]).hwPt() > etSumEtThresholdHwMet_ )
-      {
-	 jetPhi=((jets[jetNr]).hwPhi()*5.0-2.5)*pi/180.;
-	 coefficientX = int32_t(511.*cos(jetPhi));
-	 coefficientY = int32_t(511.*sin(jetPhi));
-	 htXComponent += coefficientX*ptJet;  
-	 htYComponent += coefficientY*ptJet;  
-      }
-      if ((jets[jetNr]).hwEta() > etSumEtaMinEt_ && (jets[jetNr]).hwEta() < etSumEtaMaxEt_&& (jets[jetNr]).hwPt() > etSumEtThresholdHwEt_ )
-      { 
-	 totalHt += ptJet;
-      } 
+     ptJet = (jets[jetNr]).hwPt();
+     if ((jets[jetNr]).hwEta() > etSumEtaMinMet_ && (jets[jetNr]).hwEta() < etSumEtaMaxMet_ && (jets[jetNr]).hwPt() > etSumEtThresholdHwMet_ )
+     {
+       jetPhi=((jets[jetNr]).hwPhi()*5.0-2.5)*pi/180.;
+       coefficientX = int32_t(511.*cos(jetPhi));
+       coefficientY = int32_t(511.*sin(jetPhi));
+       htXComponent += coefficientX*ptJet;  
+       htYComponent += coefficientY*ptJet;  
+     }
+     if ((jets[jetNr]).hwEta() > etSumEtaMinEt_ && (jets[jetNr]).hwEta() < etSumEtaMaxEt_&& (jets[jetNr]).hwPt() > etSumEtThresholdHwEt_ )
+     { 
+       totalHt += ptJet;
+     } 
    }
-   htYComponent /= 511.;
-   htXComponent /= 511.;  
+    htYComponent /= 511.;
+    htXComponent /= 511.;  
 
    phiMissingHt = atan2(htYComponent,htXComponent)+pi;
    if (phiMissingHt > pi) phiMissingHt = phiMissingHt - 2*pi;
@@ -72,9 +72,9 @@ void l1t::Stage2Layer2JetSumAlgorithmFirmwareImp1::processEvent(const std::vecto
    double phi_degrees = phiMissingHt *  180.0 /pi;
 
    if(phi_degrees < 0) {
-      intPhiMissingHt= 72 - (int32_t)(fabs(phi_degrees) / 5.0);
+     intPhiMissingHt= 72 - (int32_t)(fabs(phi_degrees) / 5.0);
    } else {
-      intPhiMissingHt= 1 + (int32_t)(phi_degrees / 5.0);
+     intPhiMissingHt= 1 + (int32_t)(phi_degrees / 5.0);
    } 
 
    double doubmissingHt = htXComponent*htXComponent+htYComponent*htYComponent;
@@ -85,8 +85,8 @@ void l1t::Stage2Layer2JetSumAlgorithmFirmwareImp1::processEvent(const std::vecto
    l1t::EtSum::EtSumType typeTotalHt = l1t::EtSum::EtSumType::kTotalHt;
    l1t::EtSum::EtSumType typeMissingHt = l1t::EtSum::EtSumType::kMissingHt;
 
-   l1t::EtSum htSumTotalHt(p4,typeTotalHt,totalHt,0,0,0);
-   l1t::EtSum htSumMissingHt(p4,typeMissingHt,missingHt,0,intPhiMissingHt,0);
+   l1t::EtSum htSumTotalHt(p4,typeTotalHt,totalHt/32,0,0,0);
+   l1t::EtSum htSumMissingHt(p4,typeMissingHt,missingHt/32,0,intPhiMissingHt,0);
 
    etsums.push_back(htSumTotalHt);
    etsums.push_back(htSumMissingHt);

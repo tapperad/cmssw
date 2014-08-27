@@ -32,6 +32,8 @@ l1t::Stage2Layer2EtSumAlgorithmFirmwareImp1::~Stage2Layer2EtSumAlgorithmFirmware
 void l1t::Stage2Layer2EtSumAlgorithmFirmwareImp1::processEvent(const std::vector<l1t::CaloTower> & towers,
       std::vector<l1t::EtSum> & etsums) {
 
+
+
   double pi = std::atan(1.d) * 4.0d;
 
   int ietaMax=28, ietaMin=-28, iphiMax=72, iphiMin=1;
@@ -91,11 +93,16 @@ void l1t::Stage2Layer2EtSumAlgorithmFirmwareImp1::processEvent(const std::vector
   l1t::EtSum etSumMissingEt(p4,l1t::EtSum::EtSumType::kMissingEt,met,0,metPhi,0);
   l1t::EtSum etSumEx(p4,l1t::EtSum::EtSumType::kTotalEx,ex,0,0,0);
   l1t::EtSum etSumEy(p4,l1t::EtSum::EtSumType::kTotalEy,ey,0,0,0);
-  
+ /* 
+   std::cout << "Et: "  << et << std::endl;
+   std::cout << "Met: "  << met << std::endl;
+   std::cout << "Ex: "  <<  ( static_cast<int>( ex<<12 ) >> 12 ) << std::endl;
+   std::cout << "Ey: "  << ( static_cast<int>( ey<<12 ) >> 12 ) << std::endl;
+*/
   etsums.push_back(etSumTotalEt);
-  etsums.push_back(etSumMissingEt);
   etsums.push_back(etSumEx);
   etsums.push_back(etSumEy);
+  etsums.push_back(etSumMissingEt);
 
 }
 
