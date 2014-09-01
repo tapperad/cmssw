@@ -37,7 +37,7 @@ void compHwEmu(){
   emuEt->Draw("p");
   rawEt->Draw("same");
   leg->Draw();
-  c1->SaveAs("jetEt.root");
+  c1->SaveAs("jetEt.pdf");
   
   TLegend* leg = new TLegend(0.6,0.6,0.8,0.8);
   leg->SetFillColor(0);
@@ -48,7 +48,7 @@ void compHwEmu(){
   emuEta->Draw("p");
   rawEta->Draw("same");
   leg->Draw();
-  c1->SaveAs("jetEta.root");
+  c1->SaveAs("jetEta.pdf");
 
   TLegend* leg = new TLegend(0.6,0.6,0.8,0.8);
   leg->SetFillColor(0);
@@ -59,7 +59,7 @@ void compHwEmu(){
   emuPhi->Draw("p");
   rawPhi->Draw("same");
   leg->Draw();
-  c1->SaveAs("jetPhi.root");
+  c1->SaveAs("jetPhi.pdf");
 
   TLegend* leg = new TLegend(0.6,0.6,0.8,0.8);
   leg->SetFillColor(0);
@@ -72,7 +72,7 @@ void compHwEmu(){
   emuEtTot->Draw("p");
   rawEtTot->Draw("same");
   leg->Draw();
-  c1->SaveAs("etTot.root");
+  c1->SaveAs("etTot.pdf");
 
   TLegend* leg = new TLegend(0.6,0.6,0.8,0.8);
   leg->SetFillColor(0);
@@ -85,7 +85,7 @@ void compHwEmu(){
   emuEtxTot->Draw("p");
   rawEtxTot->Draw("same");
   leg->Draw();
-  c1->SaveAs("etXTot.root");
+  c1->SaveAs("etXTot.pdf");
 
   TLegend* leg = new TLegend(0.6,0.6,0.8,0.8);
   leg->SetFillColor(0);
@@ -98,7 +98,7 @@ void compHwEmu(){
   emuEtyTot->Draw("p");
   rawEtyTot->Draw("same");
   leg->Draw();
-  c1->SaveAs("etYTot.root");
+  c1->SaveAs("etYTot.pdf");
 
   TLegend* leg = new TLegend(0.6,0.6,0.8,0.8);
   leg->SetFillColor(0);
@@ -111,7 +111,7 @@ void compHwEmu(){
   emuHtTot->Draw("p");
   rawHtTot->Draw("same");
   leg->Draw();
-  c1->SaveAs("htTot.root");
+  c1->SaveAs("htTot.pdf");
 
   TLegend* leg = new TLegend(0.6,0.6,0.8,0.8);
   leg->SetFillColor(0);
@@ -124,7 +124,7 @@ void compHwEmu(){
   emuMet->Draw("p");
   rawMet->Draw("same");
   leg->Draw();
-  c1->SaveAs("met.root");
+  c1->SaveAs("met.pdf");
 
   TLegend* leg = new TLegend(0.6,0.6,0.8,0.8);
   leg->SetFillColor(0);
@@ -137,6 +137,6 @@ void compHwEmu(){
   emuMetPhi->Draw("p");
   rawMetPhi->Draw("same");
   leg->Draw();
-  c1->SaveAs("metPhi.root");
+  c1->SaveAs("metPhi.pdf");
 
 }

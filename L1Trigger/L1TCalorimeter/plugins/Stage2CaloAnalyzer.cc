@@ -196,8 +196,6 @@ namespace l1t {
       using namespace edm;
 
       // get TPs ?
-      // get regions ?
-      // get RCT clusters ?
 
       // get towers
       if (m_doTowers) {
@@ -331,14 +329,14 @@ namespace l1t {
             hphi_.at(Sum)->Fill( itr->hwPhi() );
             hetaphi_.at(Sum)->Fill( itr->hwEta(), itr->hwPhi(), itr->hwPt() );
 
-            //Convert the bit string to a signed int
+            //Convert to a signed int
             int actualPt = ( static_cast<int>( itr->hwPt()<<12 ) >> 12 );
 
             if(itr->getType() == l1t::EtSum::EtSumType::kTotalEt || itr->getType() == l1t::EtSum::EtSumType::kMissingEt
                 || itr->getType() == l1t::EtSum::EtSumType::kTotalEx || itr->getType() == l1t::EtSum::EtSumType::kTotalEy){
 
 
-              if(i==0) het_.at(Sum)->Fill( actualPt );
+              if(i==0) het_.at(Sum)->Fill( itr->hwPt() );
               else if(i==1){
                 het1_.at(Sum)->Fill( actualPt );
                 metX+=actualPt;
@@ -354,7 +352,7 @@ namespace l1t {
 
             if(itr->getType() == l1t::EtSum::EtSumType::kTotalHt || itr->getType() == l1t::EtSum::EtSumType::kMissingHt){
 
-              if(j==0) hht_.at(Sum)->Fill( actualPt );
+              if(j==0) hht_.at(Sum)->Fill( itr->hwPt() );
               else if(j==1){
                 hht1_.at(Sum)->Fill( actualPt );
                 mhtX=actualPt;
@@ -407,9 +405,9 @@ namespace l1t {
 
         dirs_.insert( std::pair< ObjectType, TFileDirectory >(*itr, fs->mkdir(*str) ) );
 
-        het_.insert( std::pair< ObjectType, TH1F* >(*itr, dirs_.at(*itr).make<TH1F>("et", "", 501, -0.5, 500.5) ));
+        het_.insert( std::pair< ObjectType, TH1F* >(*itr, dirs_.at(*itr).make<TH1F>("et", "", 1001, -0.5, 1000.5) ));
         heta_.insert( std::pair< ObjectType, TH1F* >(*itr, dirs_.at(*itr).make<TH1F>("eta", "", 83, -41.5, 41.5) ));
-        hphi_.insert( std::pair< ObjectType, TH1F* >(*itr, dirs_.at(*itr).make<TH1F>("phi", "", 73, 0.5, 72.5) ));
+        hphi_.insert( std::pair< ObjectType, TH1F* >(*itr, dirs_.at(*itr).make<TH1F>("phi", "", 72, 0.5, 72.5) ));
         hbx_.insert( std::pair< ObjectType, TH1F* >(*itr, dirs_.at(*itr).make<TH1F>("bx", "", 11, -5.5, 5.5) ));
         hetaphi_.insert( std::pair< ObjectType, TH2F* >(*itr, dirs_.at(*itr).make<TH2F>("etaphi", "", 83, -41.5, 41.5, 72, .5, 72.5) ));
 

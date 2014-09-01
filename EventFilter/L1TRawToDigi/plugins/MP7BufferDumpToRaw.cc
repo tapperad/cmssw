@@ -74,8 +74,10 @@ private:
   std::ifstream txFile_;
   int rxLine_;
   int txLine_;
+  int nEvts_;
 
   // input file parameters
+  int nEventsToSkip_;
   int nTextHeaderLines_;
   int nFramesPerEvent_;
   int txLatency_;
@@ -124,7 +126,9 @@ MP7BufferDumpToRaw::MP7BufferDumpToRaw(const edm::ParameterSet& iConfig)
 
   rxLine_ = 0;
   txLine_ = 0;
+  nEvts_ = 0;
 
+  nEventsToSkip_ = iConfig.getUntrackedParameter<int>("nEventsToSkip", 0);
   nTextHeaderLines_ = iConfig.getUntrackedParameter<int>("nTextHeaderLines", 3);
   nFramesPerEvent_ = iConfig.getUntrackedParameter<int>("nFramesPerEvent", 41);
   txLatency_= iConfig.getUntrackedParameter<int>("txLatency", 61);
@@ -241,6 +245,8 @@ MP7BufferDumpToRaw::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
   }
 
   edm::LogInfo("mp7") << "Finished reading event at Rx line " << rxLine_ << ", Tx line " << txLine_ << std::endl;
+
+  nEvts_++;
 
   // check size of vectors
   int maxRxFrames=0;
@@ -360,7 +366,7 @@ MP7BufferDumpToRaw::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
   iWord += lenAMCHeader_;
   std::ostringstream payloadInfo;
 
-  for (int iBlock=0; iBlock<nRxLinks_ && iWord<fedSize; ++iBlock) {
+  for (int iBlock=0; iBlock<nRxLinks_ && iWord<fedSize && nEvts_ > nEventsToSkip_; ++iBlock) {
 
     int blockId     = 2*iBlock;
     int blockLength = rxBlockLength_.at(iBlock);
@@ -406,7 +412,7 @@ MP7BufferDumpToRaw::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
 
   payloadInfo.str("");
 
-  for (int iBlock=0; iBlock<nTxLinks_ && iWord<fedSize; ++iBlock) {
+  for (int iBlock=0; iBlock<nTxLinks_ && iWord<fedSize && nEvts_ > nEventsToSkip_; ++iBlock) {
 
     int blockId     = (2*iBlock)+1;
     int blockLength = txBlockLength_.at(iBlock);
