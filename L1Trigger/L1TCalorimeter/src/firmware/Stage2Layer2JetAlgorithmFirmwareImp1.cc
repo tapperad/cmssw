@@ -7,48 +7,43 @@
 
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
 #include "L1Trigger/L1TCalorimeter/interface/Stage2Layer2JetAlgorithmFirmware.h"
-
 #include "DataFormats/Math/interface/LorentzVector.h"
-
 #include "L1Trigger/L1TCalorimeter/interface/CaloTools.h"
-
 #include "L1Trigger/L1TCalorimeter/interface/BitonicSort.h"
-
 #include "CondFormats/L1TObjects/interface/CaloParams.h"
 
 #include <vector>
 #include <algorithm>
+#include <math.h>
+
+bool operator > ( l1t::Jet& a, l1t::Jet& b )
+{
+  if ( a.hwPt() > b.hwPt() ){ 
+    return true;
+  } else {
+
+    return false;
+  }
+}
 
 namespace{
   bool sortbypt(const l1t::Jet &a, const l1t::Jet &b) { return a.hwPt() > b.hwPt(); };
-  bool sortbyeta(const l1t::Jet &a, const l1t::Jet &b) { return a.hwEta() > b.hwEta(); };
+  bool sortbyeta(const l1t::Jet &a, const l1t::Jet &b) { return a.hwEta() < b.hwEta(); };
 }
 
 l1t::Stage2Layer2JetAlgorithmFirmwareImp1::Stage2Layer2JetAlgorithmFirmwareImp1(CaloParams* params) :
-  params_(params)
-{
+  params_(params){}
 
 
-}
-
-
-l1t::Stage2Layer2JetAlgorithmFirmwareImp1::~Stage2Layer2JetAlgorithmFirmwareImp1() {
-
-
-}
-
+l1t::Stage2Layer2JetAlgorithmFirmwareImp1::~Stage2Layer2JetAlgorithmFirmwareImp1() {}
 
 void l1t::Stage2Layer2JetAlgorithmFirmwareImp1::processEvent(const std::vector<l1t::CaloTower> & towers,
     std::vector<l1t::Jet> & jets) {
 
-
   // find all possible jets
   if(towers.size()>0){
 
-    create(towers, jets, (params_->jetPUSType()=="Donut"));
-
-    // remove overlaps
-    filter(jets);
+    create(towers, jets, params_->jetPUSType());
 
     // sort
     sort(jets);
@@ -57,10 +52,10 @@ void l1t::Stage2Layer2JetAlgorithmFirmwareImp1::processEvent(const std::vector<l
 
 
 void l1t::Stage2Layer2JetAlgorithmFirmwareImp1::create(const std::vector<l1t::CaloTower> & towers,
-    std::vector<l1t::Jet> & jets, bool doDonutSubtraction) {
+                                                       std::vector<l1t::Jet> & jets, std::string PUSubMethod) {
 
   //Declare the range to carry out the algorithm over
-  int etaMax=28, etaMin=-28, phiMax=72, phiMin=1;
+  int etaMax=40, etaMin=-40, phiMax=72, phiMin=1;
 
   // generate jet mask
   // needs to be configurable at some point
@@ -102,12 +97,17 @@ void l1t::Stage2Layer2JetAlgorithmFirmwareImp1::create(const std::vector<l1t::Ca
           int iphiTest = iphi+dphi;
 
           //Wrap around phi
-          if(iphiTest > phiMax){
-            iphiTest = iphiTest -phiMax +phiMin -1;
-          }
-          else if(iphiTest < phiMin){
-            iphiTest = iphiTest -phiMin +phiMax +1 ;
-          }
+	  while ( iphiTest > phiMax ) iphiTest -= phiMax;
+	  while ( iphiTest < phiMin ) iphiTest += phiMax;
+
+          // Wrap over eta=0
+	  if (ieta > 0 && ietaTest <=0){
+	    ietaTest = ietaTest-1;
+	  }
+          
+	  if (ieta < 0 && ietaTest >=0){
+	    ietaTest = ietaTest+1;
+	  }
 
           // check jet mask and sum tower et
           // re-use calo tools sum method, but for single tower
@@ -134,20 +134,15 @@ void l1t::Stage2Layer2JetAlgorithmFirmwareImp1::create(const std::vector<l1t::Ca
 
       // add the jet to the list
       if (!vetoCandidate) {
-        math::XYZTLorentzVector p4;
 
         //If doing donut PUS find the outer ring around the jet
-        if(doDonutSubtraction){
-          std::vector<int> ring;
+        if (PUSubMethod == "Donut"){
           //For 9x9 jets, subtract the 11x11 ring
-          pusRing(ieta,iphi,5,ring,towers);
-
-          //Using 2 strips with 9 towers for the subtraction
-          //Need to scale it up to the jet size, ie 81/18 = 4.5
-          iEt -= 4*( ring[1]+ring[2] ); // This is currently 4 in FW
+          iEt -= donutPUEstimate(ieta, iphi, 5, towers);
         }
 
         if(iEt>0){
+	  math::XYZTLorentzVector p4;
           l1t::Jet jet( p4, iEt, ieta, iphi, 0);
           jets.push_back( jet );
         }
@@ -160,77 +155,79 @@ void l1t::Stage2Layer2JetAlgorithmFirmwareImp1::create(const std::vector<l1t::Ca
 //A function to return the value for donut subtraction around an ieta and iphi position for donut subtraction
 //Also pass it a vector to store the individual values of the strip for later testing
 //The size is the number of ieta/iphi units out the ring is (ie for 9x9 jets, we want the 11x11 for PUS therefore we want to go 5 out, so size is 5)
-void l1t::Stage2Layer2JetAlgorithmFirmwareImp1::pusRing(int jetEta, int jetPhi, int size, std::vector<int>& ring, const std::vector<l1t::CaloTower> & towers) {
+int l1t::Stage2Layer2JetAlgorithmFirmwareImp1::donutPUEstimate(int jetEta, int jetPhi, int size, const std::vector<l1t::CaloTower> & towers){
 
   //Declare the range to carry out the algorithm over
-  int etaMax=28, etaMin=-28, phiMax=72, phiMin=1;
+  int etaMax=40, etaMin=-40, phiMax=72, phiMin=1;
 
   //ring is a vector with 4 ring strips, one for each side of the ring
-  for(int i=0; i<4; ++i) ring.push_back(0);
+  std::vector<int> ring(4,0);
 
-  int iphiUp = (jetPhi + size > phiMax) ? phiMin + size - (phiMax - jetPhi) - 1:jetPhi+size;
-  int iphiDown = (jetPhi - size < phiMin) ? phiMax-(size - (jetPhi - phiMin)) + 1:jetPhi-size;
+  int iphiUp = jetPhi + size;
+  while ( iphiUp > phiMax ) iphiUp -= phiMax;
+  int iphiDown = jetPhi - size;
+  while ( iphiDown < phiMin ) iphiDown += phiMax;
+
   int ietaUp = (jetEta + size > etaMax) ? 999 : jetEta+size;
   int ietaDown = (jetEta - size < etaMin) ? 999 : jetEta-size;
 
-  for (int ieta = jetEta - size+1; ieta != jetEta + size; ++ieta)   
+  for (int ieta = jetEta - size+1; ieta < jetEta + size; ++ieta)   
   {
+
     if (ieta > etaMax || ieta < etaMin) continue;
-    const CaloTower& tow = CaloTools::getTower(towers, ieta, iphiUp);
+    int towerEta;
+
+    if (jetEta > 0 && ieta <=0){
+      towerEta = ieta-1;
+    } else if (jetEta < 0 && ieta >=0){
+      towerEta = ieta+1;
+    } else {
+      towerEta=ieta;
+    }
+
+    const CaloTower& tow = CaloTools::getTower(towers, towerEta, iphiUp);
     int towEt = tow.hwPt();
     ring[0]+=towEt;
-    const CaloTower& tow2 = CaloTools::getTower(towers, ieta, iphiDown);
+
+    const CaloTower& tow2 = CaloTools::getTower(towers, towerEta, iphiDown);
     towEt = tow2.hwPt();
     ring[1]+=towEt;
+
   } 
-  for (int iphi = jetPhi - size+1; iphi != jetPhi + size; ++iphi)   
-  {
-    int towerPhi;
-    if (iphi < phiMin)
+
+  for (int iphi = jetPhi - size+1; iphi < jetPhi + size; ++iphi)   
     {
-      towerPhi = phiMax-(size - (jetPhi - phiMin)) + 1;
-    }
-    else if (iphi > phiMax)
-    {
-      towerPhi = phiMin + size - (phiMax - jetPhi) - 1;
-    }
-    else 
-    {
-      towerPhi = iphi;
-    }
-    //if (ieta > etaMax || ieta < etaMin) continue;
-    const CaloTower& tow = CaloTools::getTower(towers, ietaUp, towerPhi);
-    int towEt = tow.hwPt();
-    ring[2]+=towEt;
-    const CaloTower& tow2 = CaloTools::getTower(towers, ietaDown, towerPhi);
-    towEt = tow2.hwPt();
-    ring[3]+=towEt;
+
+      int towerPhi = iphi;
+      while ( towerPhi > phiMax ) towerPhi -= phiMax;
+      while ( towerPhi < phiMin ) towerPhi += phiMax;
+      
+      const CaloTower& tow = CaloTools::getTower(towers, ietaUp, towerPhi);
+      int towEt = tow.hwPt();
+      ring[2]+=towEt;
+
+      const CaloTower& tow2 = CaloTools::getTower(towers, ietaDown, towerPhi);
+      towEt = tow2.hwPt();
+      ring[3]+=towEt;
   } 
 
   //for the Donut Subtraction we only use the middle 2 (in energy) ring strips
-  //Sort the vector in order and then return it 
   std::sort(ring.begin(), ring.end(), std::greater<int>());
+
+  return 4*( ring[1]+ring[2] ); // This should really be multiplied by 4.5 not 4.
 }
-
-void l1t::Stage2Layer2JetAlgorithmFirmwareImp1::filter(std::vector<l1t::Jet> & jets) {
-
-  //  jets.erase(std::remove_if(jets.begin(), jets.end(), jetIsZero) );
-
-}
-
 
 void l1t::Stage2Layer2JetAlgorithmFirmwareImp1::sort(std::vector<l1t::Jet> & jets) {
 
-  // This is probably the way to do it in the end but needs a wrapper to provide > operator for jets
-  //  BitonicSort< l1t::Jet >( jets.begin() , jets.end() );
+  //std::vector<l1t::Jet>::iterator start(jets.begin());
+  //std::vector<l1t::Jet>::iterator end(jets.end());	
+
+  //BitonicSort< l1t::Jet >(down,start,end);
 
   // sort the jets first eta then pT and return only the top 6 from each hemisphere
   std::sort(jets.begin(), jets.end(), sortbyeta);
   std::sort(jets.begin(), jets.end(), sortbypt);
 
-  if (jets.size()>6) jets.resize(6); // truncate to top 6 jets for now   
+  if (jets.size()>12) jets.resize(12); // truncate to top 12 jets for now   
 }
-
-// remove jets with zero et
-bool l1t::Stage2Layer2JetAlgorithmFirmwareImp1::jetIsZero(l1t::Jet jet) { return jet.hwPt()==0; }
 

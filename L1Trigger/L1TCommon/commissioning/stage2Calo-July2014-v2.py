@@ -18,7 +18,7 @@ process.load('Configuration.StandardSequences.EndOfProcess_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
 process.maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32(1)
+    input = cms.untracked.int32(18)
 )
 
 # Input source
@@ -80,7 +80,8 @@ process.stage2Layer2Raw.nFramesPerEvent = cms.untracked.int32(40)
 #process.stage2Layer2Raw.txLatency       = cms.untracked.int32(54)
 #process.stage2Layer2Raw.txLatency       = cms.untracked.int32(87) # For the two towers
 #process.stage2Layer2Raw.txLatency       = cms.untracked.int32(59) # For the pi0 half eta
-process.stage2Layer2Raw.txLatency       = cms.untracked.int32(4) # For the cleaned up ttbar
+#process.stage2Layer2Raw.txLatency       = cms.untracked.int32(4) # For the cleaned up ttbar
+process.stage2Layer2Raw.txLatency       = cms.untracked.int32(93) # For the old cleaned up ttbar
 process.stage2Layer2Raw.nRxEventHeaders = cms.untracked.int32(0)
 process.stage2Layer2Raw.nTxEventHeaders = cms.untracked.int32(0)
 
@@ -184,7 +185,7 @@ process.load('L1Trigger.L1TCalorimeter.L1TCaloStage2_cff')
 process.caloStage2Digis.towerToken = cms.InputTag("l1tDigis")
 
 process.load("L1Trigger.L1TCalorimeter.caloStage2Params_cfi")
-process.caloStage2Params.etSumEtThreshold = cms.vdouble(0.,  0.,   16.,   0.)
+process.caloStage2Params.etSumEtThreshold = cms.vdouble(0.,  0.,   16.,   16.)
 
 
 ### diagnostics ###

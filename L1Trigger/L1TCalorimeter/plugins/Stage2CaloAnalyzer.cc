@@ -333,7 +333,7 @@ namespace l1t {
             int actualPt = ( static_cast<int>( itr->hwPt()<<12 ) >> 12 );
 
             if(itr->getType() == l1t::EtSum::EtSumType::kTotalEt || itr->getType() == l1t::EtSum::EtSumType::kMissingEt
-                || itr->getType() == l1t::EtSum::EtSumType::kTotalEx || itr->getType() == l1t::EtSum::EtSumType::kTotalEy){
+                || itr->getType() == l1t::EtSum::EtSumType::kTotalEtx || itr->getType() == l1t::EtSum::EtSumType::kTotalEty){
 
 
               if(i==0) het_.at(Sum)->Fill( itr->hwPt() );
@@ -405,7 +405,7 @@ namespace l1t {
 
         dirs_.insert( std::pair< ObjectType, TFileDirectory >(*itr, fs->mkdir(*str) ) );
 
-        het_.insert( std::pair< ObjectType, TH1F* >(*itr, dirs_.at(*itr).make<TH1F>("et", "", 1001, -0.5, 1000.5) ));
+        het_.insert( std::pair< ObjectType, TH1F* >(*itr, dirs_.at(*itr).make<TH1F>("et", "", 1000, -0.5, 2000.5) ));
         heta_.insert( std::pair< ObjectType, TH1F* >(*itr, dirs_.at(*itr).make<TH1F>("eta", "", 83, -41.5, 41.5) ));
         hphi_.insert( std::pair< ObjectType, TH1F* >(*itr, dirs_.at(*itr).make<TH1F>("phi", "", 72, 0.5, 72.5) ));
         hbx_.insert( std::pair< ObjectType, TH1F* >(*itr, dirs_.at(*itr).make<TH1F>("bx", "", 11, -5.5, 5.5) ));
