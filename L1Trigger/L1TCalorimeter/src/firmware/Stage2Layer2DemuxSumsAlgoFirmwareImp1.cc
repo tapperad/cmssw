@@ -100,7 +100,7 @@ void l1t::Stage2Layer2DemuxSumsAlgoFirmwareImp1::processEvent(const std::vector<
   outputSums.push_back(htSumMissingHt);
 
   // Disable for now
-  outputSums = inputSums;
+  //  outputSums = inputSums;
 
 }
 

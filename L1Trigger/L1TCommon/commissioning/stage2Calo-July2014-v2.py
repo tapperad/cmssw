@@ -18,13 +18,12 @@ process.load('Configuration.StandardSequences.EndOfProcess_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
 process.maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32(18)
+    input = cms.untracked.int32(17)
 )
 
 # Input source
 process.source = cms.Source("EmptySource",
-  #skipEvents=cms.untracked.uint32(0)
-    )
+)
 
 process.options = cms.untracked.PSet(
 )

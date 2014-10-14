@@ -23,6 +23,11 @@ bool operator > ( l1t::EGamma& a, l1t::EGamma& b )
   }
 }
 
+namespace{
+  bool sortbypt(const l1t::EGamma &a, const l1t::EGamma &b) { return a.hwPt() > b.hwPt(); };
+  bool sortbyeta(const l1t::EGamma &a, const l1t::EGamma &b) { return a.hwEta() < b.hwEta(); };
+}
+
 l1t::Stage2Layer2DemuxEGAlgoFirmwareImp1::Stage2Layer2DemuxEGAlgoFirmwareImp1(CaloParams* params) :
   params_(params)
 {
@@ -47,7 +52,8 @@ void l1t::Stage2Layer2DemuxEGAlgoFirmwareImp1::processEvent(const std::vector<l1
   std::vector<l1t::EGamma>::iterator start(outputEGammas.begin());
   std::vector<l1t::EGamma>::iterator end(outputEGammas.end());
 
-  BitonicSort< l1t::EGamma >(down,start,end);
+  //  BitonicSort< l1t::EGamma >(down,start,end);
+  std::sort(outputEGammas.begin(), outputEGammas.end(), sortbypt);
 
   // Truncate for now to allow GT testing
   if (outputEGammas.size()>12) outputEGammas.resize(12);
