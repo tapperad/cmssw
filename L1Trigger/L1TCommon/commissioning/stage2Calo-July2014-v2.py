@@ -18,7 +18,7 @@ process.load('Configuration.StandardSequences.EndOfProcess_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
 process.maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32(1)
+    input = cms.untracked.int32(18)
 )
 
 # Input source
@@ -214,12 +214,12 @@ process.path = cms.Path(
     +process.l1tDigis
 
     # emulator
-#    +process.caloStage2Digis
+    +process.caloStage2Digis
 
     # diagnostics
 #    +process.dumpRaw
     +process.rawPlots
-#    +process.simPlots
+    +process.simPlots
 )
 
 process.out = cms.EndPath(
