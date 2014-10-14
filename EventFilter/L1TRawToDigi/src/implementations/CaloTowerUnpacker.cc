@@ -20,7 +20,7 @@ namespace l1t {
 
      LogDebug("L1T") << "Block ID  = " << block_id << " size = " << size;
 
-     int nBX = int(ceil(size/44.)); // Since there are two Rx links per block with 2*28 slices in barrel and endcap + 2*13 for upgraded HF 
+     int nBX = int(ceil(size/40)); // Since there are two Rx links per block with 2*28 slices in barrel and endcap + 2*13 for upgraded HF 
 
      // Find the first and last BXs
      int firstBX = -(std::ceil((double)nBX/2.)-1);

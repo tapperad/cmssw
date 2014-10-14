@@ -57,8 +57,8 @@ namespace l1t {
 
      res2_->push_back(0,ht);
 
-     // Skip 26 empty frames                                                                                                                                             
-     for (int j=0; j<26; j++) raw_data=pop(data,i);
+     // Skip 25 empty frames                                                                                                                                             
+     for (int j=0; j<25; j++) raw_data=pop(data,i);
 
      // Two jets
      for (unsigned nJet=0; nJet < 2; nJet++){

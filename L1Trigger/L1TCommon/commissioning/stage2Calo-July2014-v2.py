@@ -18,14 +18,15 @@ process.load('Configuration.StandardSequences.EndOfProcess_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
 process.maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32(9)
+    input = cms.untracked.int32(1)
 )
 
 # Input source
-process.source = cms.Source("EmptySource")
+process.source = cms.Source("EmptySource",
+  #skipEvents=cms.untracked.uint32(0)
+    )
 
 process.options = cms.untracked.PSet(
-
 )
 
 
@@ -73,11 +74,15 @@ process.stage2Layer2Raw = EventFilter.L1TRawToDigi.mp7BufferDumpToRaw_cfi.mp7Buf
 process.stage2Layer2Raw.fedId           = cms.untracked.int32(2)
 process.stage2Layer2Raw.rxFile          = cms.untracked.string("rx_summary.txt")
 process.stage2Layer2Raw.txFile          = cms.untracked.string("tx_summary.txt")
-process.stage2Layer2Raw.nFramesPerEvent = cms.untracked.int32(54)
-process.stage2Layer2Raw.txLatency       = cms.untracked.int32(54)
-process.stage2Layer2Raw.nRxEventHeaders = cms.untracked.int32(1)
+process.stage2Layer2Raw.nEventsToSkip = cms.untracked.int32(0)
+process.stage2Layer2Raw.nFramesPerEvent = cms.untracked.int32(40)
+#process.stage2Layer2Raw.txLatency       = cms.untracked.int32(87) # For the two towers
+#process.stage2Layer2Raw.txLatency       = cms.untracked.int32(59) # For the pi0 half eta
+process.stage2Layer2Raw.txLatency       = cms.untracked.int32(93) # For the ttbar
+process.stage2Layer2Raw.nRxEventHeaders = cms.untracked.int32(0)
 process.stage2Layer2Raw.nTxEventHeaders = cms.untracked.int32(0)
-process.stage2Layer2Raw.rxBlockLength   = cms.untracked.vint32(
+
+process.stage2Layer2Raw.rxBlockLength   = cms.untracked.vint32( 
     40,0,40,0,40,0,40,0,40,
     0,40,0,40,0,40,0,40,0,
     40,0,40,0,40,0,40,0,40,
@@ -88,7 +93,7 @@ process.stage2Layer2Raw.rxBlockLength   = cms.untracked.vint32(
     0,40,0,40,0,40,0,40,0)
 
 process.stage2Layer2Raw.txBlockLength   = cms.untracked.vint32(
-    39,39,39,39,39,39,0,0,0,
+    38,38,38,38,38,38,0,0,0,
     0,0,0,0,0,0,0,0,0,
     0,0,0,0,0,0,0,0,0,
     0,0,0,0,0,0,0,0,0,
@@ -140,7 +145,7 @@ process.stage2Layer2Raw.txBlockLength   = cms.untracked.vint32(
 import EventFilter.RawDataCollector.rawDataCollector_cfi
 process.rawData = EventFilter.RawDataCollector.rawDataCollector_cfi.rawDataCollector.clone()
 process.rawData.RawCollectionList = cms.VInputTag(
-    cms.InputTag('stage2Layer2Raw'),
+    cms.InputTag('stage2Layer2Raw')#,
     #cms.InputTag('stage2DemuxRaw')
 )
 
@@ -164,7 +169,7 @@ process.load('L1Trigger.L1TCalorimeter.L1TCaloStage2_cff')
 process.caloStage2Digis.towerToken = cms.InputTag("l1tDigis")
 
 process.load("L1Trigger.L1TCalorimeter.caloStage2Params_cfi")
-
+process.caloStage2Params.etSumEtThreshold = cms.vdouble(0.,  0.,   16.,   16.)
 
 
 ### diagnostics ###
@@ -184,15 +189,15 @@ process.rawPlots.towerToken = cms.InputTag("l1tDigis")
 process.rawPlots.clusterToken = cms.InputTag("None")
 process.rawPlots.egToken = cms.InputTag("None")
 process.rawPlots.tauToken = cms.InputTag("None")
-process.rawPlots.jetToken = cms.InputTag("l1tDigis")
-process.rawPlots.etSumToken = cms.InputTag("l1tDigis")
+process.rawPlots.jetToken = cms.InputTag("l1tDigis:MP")
+process.rawPlots.etSumToken = cms.InputTag("l1tDigis:MP")
 
 # plots from emulator
 process.simPlots = L1Trigger.L1TCalorimeter.l1tStage2CaloAnalyzer_cfi.l1tStage2CaloAnalyzer.clone()
-process.simPlots.towerToken = cms.InputTag("caloStage2Digis")
-process.simPlots.clusterToken = cms.InputTag("caloStage2Digis")
-process.simPlots.egToken = cms.InputTag("caloStage2Digis")
-process.simPlots.tauToken = cms.InputTag("caloStage2Digis")
+process.simPlots.towerToken = cms.InputTag("None")
+process.simPlots.clusterToken = cms.InputTag("None")
+process.simPlots.egToken = cms.InputTag("None")
+process.simPlots.tauToken = cms.InputTag("None")
 process.simPlots.jetToken = cms.InputTag("caloStage2Digis")
 process.simPlots.etSumToken = cms.InputTag("caloStage2Digis")
 
@@ -209,12 +214,12 @@ process.path = cms.Path(
     +process.l1tDigis
 
     # emulator
-    +process.caloStage2Digis
+#    +process.caloStage2Digis
 
     # diagnostics
-    +process.dumpRaw
+#    +process.dumpRaw
     +process.rawPlots
-    +process.simPlots
+#    +process.simPlots
 )
 
 process.out = cms.EndPath(
