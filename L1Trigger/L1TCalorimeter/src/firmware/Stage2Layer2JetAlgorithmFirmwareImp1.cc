@@ -228,7 +228,7 @@ void l1t::Stage2Layer2JetAlgorithmFirmwareImp1::sort(std::vector<l1t::Jet> & jet
   std::sort(jets.begin(), jets.end(), sortbyeta);
   std::sort(jets.begin(), jets.end(), sortbypt);
 
-  //  if (jets.size()>12) jets.resize(12); // truncate to top 12 jets for now   
-  if (jets.size()>6) jets.resize(6); // Remember to remove this!
+  if (jets.size()>12) jets.resize(12); // truncate to top 12 jets for now   
+  //  if (jets.size()>6) jets.resize(6); // Remember to remove this!
 }
 
