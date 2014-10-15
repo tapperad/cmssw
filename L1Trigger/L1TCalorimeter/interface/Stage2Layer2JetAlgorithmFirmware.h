@@ -32,7 +32,10 @@ namespace l1t {
     void sort(std::vector<Jet> & jets);
 
     int donutPUEstimate(int jetEta, int jetPhi, int size, 
-                       const std::vector<l1t::CaloTower> & towers);
+                        const std::vector<l1t::CaloTower> & towers);
+    
+    int chunkyDonutPUEstimate(int jetEta, int jetPhi, int pos, 
+                              const std::vector<l1t::CaloTower> & towers);
 
   private:
 

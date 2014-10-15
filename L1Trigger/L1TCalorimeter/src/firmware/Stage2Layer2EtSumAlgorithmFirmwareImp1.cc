@@ -68,26 +68,16 @@ void l1t::Stage2Layer2EtSumAlgorithmFirmwareImp1::processEvent(const std::vector
 
   }
  
-  // final MET calculation - this should go in the demux class
-
-  //  int32_t met = (int32_t) std::sqrt(std::pow( (double) ex,2) + std::pow( (double) ey,2));
-
-  //  double metPhiRadians = std::atan2( (double) ey, (double) ex ) + M_PI;
-
-  //  int32_t metPhi = (int32_t) metPhiRadians / (2 * M_PI);
-
   // push output
   math::XYZTLorentzVector p4;
 
   l1t::EtSum etSumTotalEt(p4,l1t::EtSum::EtSumType::kTotalEt,et,0,0,0);
-  //  l1t::EtSum etSumMissingEt(p4,l1t::EtSum::EtSumType::kMissingEt,met,0,metPhi,0);
   l1t::EtSum etSumEx(p4,l1t::EtSum::EtSumType::kTotalEtx,ex,0,0,0);
   l1t::EtSum etSumEy(p4,l1t::EtSum::EtSumType::kTotalEty,ey,0,0,0);
   
   etsums.push_back(etSumTotalEt);
   etsums.push_back(etSumEx);
   etsums.push_back(etSumEy);
-  //  etsums.push_back(etSumMissingEt);
 
 }
 

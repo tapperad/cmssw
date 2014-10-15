@@ -44,29 +44,13 @@ void l1t::Stage2Layer2JetSumAlgorithmFirmwareImp1::processEvent(const std::vecto
    hy >>=5;
    ht >>=5;
 
-   int32_t mht = (int32_t) std::sqrt( std::pow((double) hx,2) + std::pow((double) hy,2) );
-
-   int32_t mhtPhi = 72 * atan2( (double) hy , (double) hx );
-   while ( mhtPhi > 72 ) mhtPhi-=72;
-   while ( mhtPhi < 1 ) mhtPhi+=72;
-   
-   mht &= 0xfff;
-   ht  &= 0xfff;
-
-   std::cout << "HT: "  << ht << std::endl;
-   std::cout << "MHT: "  << mht << std::endl;
-   std::cout << "MHTx: "  << hx << std::endl;
-   std::cout << "MHTy: "  << hy << std::endl;
-
    math::XYZTLorentzVector p4;
 
    l1t::EtSum htSumht( p4 , l1t::EtSum::EtSumType::kTotalHt ,ht,0,0,0);
-   l1t::EtSum htSumMissingHt( p4 , l1t::EtSum::EtSumType::kMissingHt ,mht,0,mhtPhi,0);
    l1t::EtSum htSumMissingHtx( p4 , l1t::EtSum::EtSumType::kTotalHtx ,hx,0,0,0);
    l1t::EtSum htSumMissingHty( p4 , l1t::EtSum::EtSumType::kTotalHty ,hy,0,0,0);
 
    etsums.push_back(htSumht);
-   etsums.push_back(htSumMissingHt);
    etsums.push_back(htSumMissingHtx);
    etsums.push_back(htSumMissingHty);
 }

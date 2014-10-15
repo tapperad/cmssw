@@ -53,9 +53,9 @@ process.MessageLogger = cms.Service(
 	threshold  = cms.untracked.string('DEBUG') 
     ),
     debugModules = cms.untracked.vstring(
-        'mp7BufferDumpToRaw',
+#        'mp7BufferDumpToRaw',
         'l1tDigis',
-	'caloStage2TowerDigis',
+#	'caloStage2TowerDigis',
 	'caloStage2Digis'
     )
 )

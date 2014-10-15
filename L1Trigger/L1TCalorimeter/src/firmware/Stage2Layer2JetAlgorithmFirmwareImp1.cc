@@ -38,9 +38,12 @@ l1t::Stage2Layer2JetAlgorithmFirmwareImp1::Stage2Layer2JetAlgorithmFirmwareImp1(
 l1t::Stage2Layer2JetAlgorithmFirmwareImp1::~Stage2Layer2JetAlgorithmFirmwareImp1() {}
 
 void l1t::Stage2Layer2JetAlgorithmFirmwareImp1::processEvent(const std::vector<l1t::CaloTower> & towers,
-    std::vector<l1t::Jet> & jets) {
+                                                             std::vector<l1t::Jet> & jets) {
 
   // find all possible jets
+
+  edm::LogInfo("L1Emulator") << "Number of towers = " << towers.size();
+
   if(towers.size()>0){
 
     create(towers, jets, params_->jetPUSType());
@@ -72,7 +75,6 @@ void l1t::Stage2Layer2JetAlgorithmFirmwareImp1::create(const std::vector<l1t::Ca
     { 1,2,2,2,2,2,2,2,2 },
     { 2,2,2,2,2,2,2,2,2 }
   };
-
 
   // loop over jet positions
   for ( int ieta = etaMin ; ieta <= etaMax ; ++ieta ) {
@@ -136,10 +138,11 @@ void l1t::Stage2Layer2JetAlgorithmFirmwareImp1::create(const std::vector<l1t::Ca
       if (!vetoCandidate) {
 
         //If doing donut PUS find the outer ring around the jet
-        if (PUSubMethod == "Donut"){
-          //For 9x9 jets, subtract the 11x11 ring
-          iEt -= donutPUEstimate(ieta, iphi, 5, towers);
-        }
+        LogDebug("l1t|caloStage2") << "PU subtraction method requested: " << PUSubMethod;
+            
+        if (PUSubMethod == "Donut") iEt -= donutPUEstimate(ieta, iphi, 5, towers);
+        
+        if (PUSubMethod == "ChunkyDonut") iEt -= chunkyDonutPUEstimate(ieta, iphi, 5, towers);
 
         if(iEt>0){
 	  math::XYZTLorentzVector p4;
@@ -172,28 +175,28 @@ int l1t::Stage2Layer2JetAlgorithmFirmwareImp1::donutPUEstimate(int jetEta, int j
   int ietaDown = (jetEta - size < etaMin) ? 999 : jetEta-size;
 
   for (int ieta = jetEta - size+1; ieta < jetEta + size; ++ieta)   
-  {
+    {
 
-    if (ieta > etaMax || ieta < etaMin) continue;
-    int towerEta;
+      if (ieta > etaMax || ieta < etaMin) continue;
+      int towerEta;
 
-    if (jetEta > 0 && ieta <=0){
-      towerEta = ieta-1;
-    } else if (jetEta < 0 && ieta >=0){
-      towerEta = ieta+1;
-    } else {
-      towerEta=ieta;
-    }
+      if (jetEta > 0 && ieta <=0){
+        towerEta = ieta-1;
+      } else if (jetEta < 0 && ieta >=0){
+        towerEta = ieta+1;
+      } else {
+        towerEta=ieta;
+      }
 
-    const CaloTower& tow = CaloTools::getTower(towers, towerEta, iphiUp);
-    int towEt = tow.hwPt();
-    ring[0]+=towEt;
+      const CaloTower& tow = CaloTools::getTower(towers, towerEta, iphiUp);
+      int towEt = tow.hwPt();
+      ring[0]+=towEt;
 
-    const CaloTower& tow2 = CaloTools::getTower(towers, towerEta, iphiDown);
-    towEt = tow2.hwPt();
-    ring[1]+=towEt;
+      const CaloTower& tow2 = CaloTools::getTower(towers, towerEta, iphiDown);
+      towEt = tow2.hwPt();
+      ring[1]+=towEt;
 
-  } 
+    } 
 
   for (int iphi = jetPhi - size+1; iphi < jetPhi + size; ++iphi)   
     {
@@ -209,12 +212,79 @@ int l1t::Stage2Layer2JetAlgorithmFirmwareImp1::donutPUEstimate(int jetEta, int j
       const CaloTower& tow2 = CaloTools::getTower(towers, ietaDown, towerPhi);
       towEt = tow2.hwPt();
       ring[3]+=towEt;
-  } 
+    } 
 
   //for the Donut Subtraction we only use the middle 2 (in energy) ring strips
   std::sort(ring.begin(), ring.end(), std::greater<int>());
 
   return 4*( ring[1]+ring[2] ); // This should really be multiplied by 4.5 not 4.
+}
+
+int l1t::Stage2Layer2JetAlgorithmFirmwareImp1::chunkyDonutPUEstimate(int jetEta, int jetPhi, int pos, const std::vector<l1t::CaloTower> & towers){
+
+  //Declare the range to carry out the algorithm over
+  int etaMax=40, etaMin=-40, phiMax=72, phiMin=1;
+
+  //ring is a vector with 4 ring strips, one for each side of the ring
+  std::vector<int> ring(4,0);
+
+  // Loop over number of strips
+ 
+  for (int size=pos; size<pos+4; size++){
+
+    int iphiUp = jetPhi + size;
+    while ( iphiUp > phiMax ) iphiUp -= phiMax;
+    int iphiDown = jetPhi - size;
+    while ( iphiDown < phiMin ) iphiDown += phiMax;
+
+    int ietaUp = (jetEta + size > etaMax) ? 999 : jetEta+size;
+    int ietaDown = (jetEta - size < etaMin) ? 999 : jetEta-size;
+
+    for (int ieta = jetEta - size+1; ieta < jetEta + size; ++ieta)   
+      {
+
+        if (ieta > etaMax || ieta < etaMin) continue;
+        int towerEta;
+
+        if (jetEta > 0 && ieta <=0){
+          towerEta = ieta-1;
+        } else if (jetEta < 0 && ieta >=0){
+          towerEta = ieta+1;
+        } else {
+          towerEta=ieta;
+        }
+
+        const CaloTower& tow = CaloTools::getTower(towers, towerEta, iphiUp);
+        int towEt = tow.hwPt();
+        ring[0]+=towEt;
+
+        const CaloTower& tow2 = CaloTools::getTower(towers, towerEta, iphiDown);
+        towEt = tow2.hwPt();
+        ring[1]+=towEt;
+
+      } 
+
+    for (int iphi = jetPhi - size+1; iphi < jetPhi + size; ++iphi)   
+      {
+
+        int towerPhi = iphi;
+        while ( towerPhi > phiMax ) towerPhi -= phiMax;
+        while ( towerPhi < phiMin ) towerPhi += phiMax;
+      
+        const CaloTower& tow = CaloTools::getTower(towers, ietaUp, towerPhi);
+        int towEt = tow.hwPt();
+        ring[2]+=towEt;
+
+        const CaloTower& tow2 = CaloTools::getTower(towers, ietaDown, towerPhi);
+        towEt = tow2.hwPt();
+        ring[3]+=towEt;
+      } 
+
+  }
+  //for the Donut Subtraction we only use the middle 2 (in energy) ring strips
+  std::sort(ring.begin(), ring.end(), std::greater<int>());
+
+  return (int)(1.5*( ring[1]+ring[2] )); 
 }
 
 void l1t::Stage2Layer2JetAlgorithmFirmwareImp1::sort(std::vector<l1t::Jet> & jets) {
@@ -229,6 +299,6 @@ void l1t::Stage2Layer2JetAlgorithmFirmwareImp1::sort(std::vector<l1t::Jet> & jet
   std::sort(jets.begin(), jets.end(), sortbypt);
 
   if (jets.size()>12) jets.resize(12); // truncate to top 12 jets for now   
-  //  if (jets.size()>6) jets.resize(6); // Remember to remove this!
+  // if (jets.size()>6) jets.resize(6); // Remember to remove this!
 }
 

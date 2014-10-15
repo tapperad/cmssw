@@ -52,7 +52,7 @@ void l1t::Stage2Layer2DemuxTauAlgoFirmwareImp1::processEvent(const std::vector<l
   std::vector<l1t::Tau>::iterator start(outputTaus.begin());
   std::vector<l1t::Tau>::iterator end(outputTaus.end());
 
-  //  BitonicSort< l1t::EGamma >(down,start,end);
+  //BitonicSort< l1t::Tau >(down,start,end);
   std::sort(outputTaus.begin(), outputTaus.end(), sortbypt);
 
   // Truncate for now to allow GT testing

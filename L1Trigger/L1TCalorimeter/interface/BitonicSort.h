@@ -41,7 +41,7 @@ void BitonicSort( sort_direction aDir,
 {
   uint32_t lSize( aDataEnd - aDataStart );
 
-  if( lSize != 1 ){
+  if( lSize > 1 ){
     typename std::vector<T>::iterator lMidpoint( aDataStart+(lSize>>1) );
     BitonicSort<T> ( up, aDataStart , lMidpoint );
     BitonicSort<T> ( down, lMidpoint , aDataEnd );
@@ -59,7 +59,7 @@ void BitonicMerge( sort_direction aDir,
 {
   uint32_t lSize( aDataEnd - aDataStart );
 
-  if( lSize != 1 ){
+  if( lSize > 1 ){
     BitonicCompare<T> ( aDir, aDataStart , aDataEnd );
     typename std::vector<T>::iterator lMidpoint( aDataStart+(lSize>>1) );
     BitonicMerge<T> ( aDir, aDataStart , lMidpoint );
