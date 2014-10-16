@@ -42,9 +42,35 @@ namespace l1t {
      // Loop over multiple BX and fill EtSums collection
      for (int bx=firstBX; bx<lastBX; bx++){
 
-       //  MET
+       // ET
 
        uint32_t raw_data = pop(data,i); // pop advances the index i internally
+
+       l1t::EtSum et = l1t::EtSum();
+    
+       et.setHwPt(raw_data & 0xFFF);
+       et.setType(l1t::EtSum::kTotalEt);       
+
+       LogDebug("L1T") << "ET: pT " << et.hwPt();
+
+       res_->push_back(bx,et);
+
+       // HT
+
+       raw_data = pop(data,i); // pop advances the index i internally
+
+       l1t::EtSum ht = l1t::EtSum();
+    
+       ht.setHwPt(raw_data & 0xFFF);
+       ht.setType(l1t::EtSum::kTotalHt);       
+
+       LogDebug("L1T") << "HT: pT " << ht.hwPt();
+
+       res_->push_back(bx,ht);
+
+       //  MET
+
+       raw_data = pop(data,i); // pop advances the index i internally
 
        l1t::EtSum met = l1t::EtSum();
     
@@ -69,33 +95,6 @@ namespace l1t {
        LogDebug("L1T") << "MHT: phi " << mht.hwPhi() << " pT " << mht.hwPt();
 
        res_->push_back(bx,mht);       
-
-       // ET
-
-       raw_data = pop(data,i); // pop advances the index i internally
-
-       l1t::EtSum et = l1t::EtSum();
-    
-       et.setHwPt(raw_data & 0xFFF);
-       et.setType(l1t::EtSum::kTotalEt);       
-
-       LogDebug("L1T") << "ET: pT " << et.hwPt();
-
-       res_->push_back(bx,et);
-
-       // HT
-
-       raw_data = pop(data,i); // pop advances the index i internally
-
-       l1t::EtSum ht = l1t::EtSum();
-    
-       ht.setHwPt(raw_data & 0xFFF);
-       ht.setType(l1t::EtSum::kTotalHt);       
-
-       LogDebug("L1T") << "HT: pT " << ht.hwPt();
-
-       res_->push_back(bx,ht);
-
      }
 
      return true;
