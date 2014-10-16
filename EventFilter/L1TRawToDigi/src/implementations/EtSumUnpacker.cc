@@ -20,15 +20,15 @@ namespace l1t {
 
      LogDebug("L1T") << "Block ID  = " << block_id << " size = " << size;
 
-     int nBX = int(ceil(size / 4.)); // Since there are 4 EtSum objects reported per event (see CMS IN-2013/005)
+     int nBX = int(ceil(size / 4)); // Since there are 4 EtSum objects reported per event (see CMS IN-2013/005)
 
      // Find the central, first and last BXs
      int firstBX = -(ceil((double)nBX/2.)-1);
      int lastBX;
      if (nBX % 2 == 0) {
-       lastBX = ceil((double)nBX/2.)+1;
-     } else {
        lastBX = ceil((double)nBX/2.);
+     } else {
+       lastBX = ceil((double)nBX/2.)-1;
      }
 
      auto res_ = static_cast<CaloCollections*>(coll)->getEtSums();

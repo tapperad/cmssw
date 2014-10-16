@@ -137,14 +137,12 @@ void l1t::Stage2Layer2JetAlgorithmFirmwareImp1::create(const std::vector<l1t::Ca
       // add the jet to the list
       if (!vetoCandidate) {
 
-        //If doing donut PUS find the outer ring around the jet
-        LogDebug("l1t|caloStage2") << "PU subtraction method requested: " << PUSubMethod;
-            
         if (PUSubMethod == "Donut") iEt -= donutPUEstimate(ieta, iphi, 5, towers);
         
         if (PUSubMethod == "ChunkyDonut") iEt -= chunkyDonutPUEstimate(ieta, iphi, 5, towers);
 
         if(iEt>0){
+
 	  math::XYZTLorentzVector p4;
           l1t::Jet jet( p4, iEt, ieta, iphi, 0);
           jets.push_back( jet );
@@ -230,7 +228,7 @@ int l1t::Stage2Layer2JetAlgorithmFirmwareImp1::chunkyDonutPUEstimate(int jetEta,
 
   // Loop over number of strips
  
-  for (int size=pos; size<pos+4; size++){
+  for (int size=pos; size<pos+3; size++){
 
     int iphiUp = jetPhi + size;
     while ( iphiUp > phiMax ) iphiUp -= phiMax;
@@ -284,7 +282,7 @@ int l1t::Stage2Layer2JetAlgorithmFirmwareImp1::chunkyDonutPUEstimate(int jetEta,
   //for the Donut Subtraction we only use the middle 2 (in energy) ring strips
   std::sort(ring.begin(), ring.end(), std::greater<int>());
 
-  return (int)(1.5*( ring[1]+ring[2] )); 
+  return ( ring[1]+ring[2] ); 
 }
 
 void l1t::Stage2Layer2JetAlgorithmFirmwareImp1::sort(std::vector<l1t::Jet> & jets) {
@@ -299,6 +297,6 @@ void l1t::Stage2Layer2JetAlgorithmFirmwareImp1::sort(std::vector<l1t::Jet> & jet
   std::sort(jets.begin(), jets.end(), sortbypt);
 
   if (jets.size()>12) jets.resize(12); // truncate to top 12 jets for now   
-  // if (jets.size()>6) jets.resize(6); // Remember to remove this!
+  //  if (jets.size()>6) jets.resize(6); // Remember to remove this!
 }
 

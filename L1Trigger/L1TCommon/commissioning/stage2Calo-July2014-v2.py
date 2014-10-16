@@ -169,7 +169,7 @@ process.caloStage2Digis.towerToken = cms.InputTag("l1tDigis")
 
 process.load("L1Trigger.L1TCalorimeter.caloStage2Params_cfi")
 process.caloStage2Params.etSumEtThreshold = cms.vdouble(0.,  0.,   16.,   16.)
-
+process.caloStage2Params.jetPUSType = cms.string("Donut")
 
 ### diagnostics ###
 
@@ -197,8 +197,8 @@ process.simPlots.towerToken = cms.InputTag("None")
 process.simPlots.clusterToken = cms.InputTag("None")
 process.simPlots.egToken = cms.InputTag("None")
 process.simPlots.tauToken = cms.InputTag("None")
-process.simPlots.jetToken = cms.InputTag("caloStage2Digis")
-process.simPlots.etSumToken = cms.InputTag("caloStage2Digis")
+process.simPlots.jetToken = cms.InputTag("caloStage2Digis:MP")
+process.simPlots.etSumToken = cms.InputTag("caloStage2Digis:MP")
 
 
 # Path and EndPath definitions
@@ -217,6 +217,7 @@ process.path = cms.Path(
 
     # diagnostics
 #    +process.dumpRaw
+
     +process.rawPlots
     +process.simPlots
 )

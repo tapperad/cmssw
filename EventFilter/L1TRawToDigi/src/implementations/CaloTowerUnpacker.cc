@@ -26,10 +26,18 @@ namespace l1t {
      int firstBX = -(std::ceil((double)nBX/2.)-1);
      int lastBX;
      if (nBX % 2 == 0) {
-       lastBX = std::ceil((double)nBX/2.)+1;
-     } else {
        lastBX = std::ceil((double)nBX/2.);
+     } else {
+       lastBX = std::ceil((double)nBX/2.)-1;
      }
+
+     // int firstBX = -(std::ceil((double)nBX/2.)-1);
+     // int lastBX;
+     // if (nBX % 2 == 0) {
+     //   lastBX = std::ceil((double)nBX/2.)+1;
+     // } else {
+     //   lastBX = std::ceil((double)nBX/2.);
+     // }
 
      auto res_ = static_cast<CaloCollections*>(coll)->getTowers();
      res_->setBXRange(std::min(firstBX, res_->getFirstBX()), std::max(lastBX, res_->getLastBX()));
@@ -47,7 +55,7 @@ namespace l1t {
      unsigned link_phi = (link % 2 == 0) ? link : (link -1);
 
      // Loop over multiple BX and fill towers collection
-     for (int bx=firstBX; bx<lastBX; bx++){
+     for (int bx=firstBX; bx<lastBX+1; bx++){
 
        for (unsigned frame=1; frame<42 && frame<(size+1); frame++){
 

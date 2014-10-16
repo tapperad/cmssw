@@ -103,13 +103,11 @@ namespace l1t {
       std::map< ObjectType, TH1F* > hhad_;
       std::map< ObjectType, TH1F* > hratio_;
       std::map< ObjectType, TH2F* > hetaphi_;
-      std::map< ObjectType, TH1F* > het1_;
-      std::map< ObjectType, TH1F* > het2_;
-      std::map< ObjectType, TH1F* > het3_;
+      std::map< ObjectType, TH1F* > hetx_;
+      std::map< ObjectType, TH1F* > hety_;
       std::map< ObjectType, TH1F* > hht_;
-      std::map< ObjectType, TH1F* > hht1_;
-      std::map< ObjectType, TH1F* > hht2_;
-      std::map< ObjectType, TH1F* > hht3_;
+      std::map< ObjectType, TH1F* > hhtx_;
+      std::map< ObjectType, TH1F* > hhty_;
       std::map< ObjectType, TH1F* > hmet_;
       std::map< ObjectType, TH1F* > hmetphi_;
       std::map< ObjectType, TH1F* > hmht_;
@@ -315,82 +313,58 @@ namespace l1t {
         Handle< BXVector<l1t::EtSum> > sums;
         iEvent.getByToken(m_sumToken,sums);
 
-        double metX=0., metY=0., mhtX=0., mhtY=0.;
         for ( int ibx=sums->getFirstBX(); ibx<=sums->getLastBX(); ++ibx) {
 
           if (ibx>-6 && ibx<6) {
             hbx_.at(Sum)->Fill( ibx );
           }
 
-          int i=0,j=0;
-
           for ( auto itr = sums->begin(ibx); itr != sums->end(ibx); ++itr ) {
-            heta_.at(Sum)->Fill( itr->hwEta() );
-            hphi_.at(Sum)->Fill( itr->hwPhi() );
-            hetaphi_.at(Sum)->Fill( itr->hwEta(), itr->hwPhi(), itr->hwPt() );
 
-            //Convert to a signed int
-            int actualPt = ( static_cast<int>( itr->hwPt()<<12 ) >> 12 );
+            switch (itr->getType()) {
 
-            if(itr->getType() == l1t::EtSum::EtSumType::kTotalEt || itr->getType() == l1t::EtSum::EtSumType::kMissingEt
-                || itr->getType() == l1t::EtSum::EtSumType::kTotalEtx || itr->getType() == l1t::EtSum::EtSumType::kTotalEty){
+            case l1t::EtSum::EtSumType::kTotalEt:
+              het_.at(Sum)->Fill( itr->hwPt() );
+              break;
+              
+            case l1t::EtSum::EtSumType::kTotalEtx:
+              hetx_.at(Sum)->Fill( itr->hwPt() );
+              break;
+              
+            case l1t::EtSum::EtSumType::kTotalEty:
+              hety_.at(Sum)->Fill( itr->hwPt() );
+              break;
+              
+            case l1t::EtSum::EtSumType::kTotalHt:
+              hht_.at(Sum)->Fill( itr->hwPt() );
+              break;
+              
+            case l1t::EtSum::EtSumType::kTotalHtx:
+              hhtx_.at(Sum)->Fill( itr->hwPt() );
+              break;
+              
+            case l1t::EtSum::EtSumType::kTotalHty:
+              hhty_.at(Sum)->Fill( itr->hwPt() );
+              break;
+              
+            case l1t::EtSum::EtSumType::kMissingEt:
+              hmet_.at(Sum)->Fill( itr->hwPt() );
+              hmetphi_.at(Sum)->Fill( itr->hwPhi() );
+              break;
 
+            case l1t::EtSum::EtSumType::kMissingHt:
+              hmht_.at(Sum)->Fill( itr->hwPt() );
+              hmhtphi_.at(Sum)->Fill( itr->hwPhi() );
+              break;
 
-              if(i==0) het_.at(Sum)->Fill( itr->hwPt() );
-              else if(i==1){
-                het1_.at(Sum)->Fill( actualPt );
-                metX+=actualPt;
-              }
-              else if(i==2){
-                het2_.at(Sum)->Fill( actualPt );
-                metY+=actualPt;
-              }
-              else if(i==3) het3_.at(Sum)->Fill( actualPt );
-
-              i++;
+            default:
+              continue; // Should throw an exception or something?
             }
-
-            if(itr->getType() == l1t::EtSum::EtSumType::kTotalHt || itr->getType() == l1t::EtSum::EtSumType::kMissingHt){
-
-              if(j==0) hht_.at(Sum)->Fill( itr->hwPt() );
-              else if(j==1){
-                hht1_.at(Sum)->Fill( actualPt );
-                mhtX=actualPt;
-              }
-              else if(j==2){
-                hht2_.at(Sum)->Fill( actualPt );
-                mhtY=actualPt;
-              }
-              else if(j==3) hht3_.at(Sum)->Fill( actualPt );
-
-              j++;
-            }
-
-
-            /*
-               if(itr->getType() == l1t::EtSum::EtSumType::kMissingEt){
-               hmet_.at(Sum)->Fill( itr->hwPt() );
-               }
-               if(itr->getType() == l1t::EtSum::EtSumType::kTotalEx){
-               hex_.at(Sum)->Fill( itr->hwPt() );
-               }
-               if(itr->getType() == l1t::EtSum::EtSumType::kTotalEy){
-               hey_.at(Sum)->Fill( itr->hwPt() );
-               }
-               */
-
           }
+          
         }
-        hmet_.at(Sum)->Fill(sqrt(metX*metX+metY*metY));
-        hmetphi_.at(Sum)->Fill(atan2(metY,metX));
-        hmht_.at(Sum)->Fill(sqrt(mhtX*mhtX+mhtY*mhtY));
-        hmhtphi_.at(Sum)->Fill(atan2(mhtY,mhtX));
-
-      }
-
+      }        
     }
-
-
   // ------------ method called once each job just before starting event loop  ------------
   void 
     Stage2CaloAnalyzer::beginJob()
@@ -418,13 +392,11 @@ namespace l1t {
         }
 
         if (*itr==Sum) {
-          het1_.insert( std::pair< ObjectType, TH1F* >(*itr, dirs_.at(*itr).make<TH1F>("et1", "", 501, -250.5, 250.5) ));
-          het2_.insert( std::pair< ObjectType, TH1F* >(*itr, dirs_.at(*itr).make<TH1F>("et2", "", 501, -250.5, 250.5) ));
-          het3_.insert( std::pair< ObjectType, TH1F* >(*itr, dirs_.at(*itr).make<TH1F>("et3", "", 501, -250.5, 250.5) ));
+          hetx_.insert( std::pair< ObjectType, TH1F* >(*itr, dirs_.at(*itr).make<TH1F>("etx", "", 501, -250.5, 250.5) ));
+          hety_.insert( std::pair< ObjectType, TH1F* >(*itr, dirs_.at(*itr).make<TH1F>("ety", "", 501, -250.5, 250.5) ));
           hht_.insert( std::pair< ObjectType, TH1F* >(*itr, dirs_.at(*itr).make<TH1F>("ht", "", 501, -0.5, 500.5) ));
-          hht1_.insert( std::pair< ObjectType, TH1F* >(*itr, dirs_.at(*itr).make<TH1F>("ht1", "", 501, -250.5, 250.5) ));
-          hht2_.insert( std::pair< ObjectType, TH1F* >(*itr, dirs_.at(*itr).make<TH1F>("ht2", "", 501, -250.5, 250.5) ));
-          hht3_.insert( std::pair< ObjectType, TH1F* >(*itr, dirs_.at(*itr).make<TH1F>("ht3", "", 501, -250.5, 250.5) ));
+          hhtx_.insert( std::pair< ObjectType, TH1F* >(*itr, dirs_.at(*itr).make<TH1F>("htx", "", 501, -250.5, 250.5) ));
+          hhty_.insert( std::pair< ObjectType, TH1F* >(*itr, dirs_.at(*itr).make<TH1F>("hty", "", 501, -250.5, 250.5) ));
 
           hmht_.insert( std::pair< ObjectType, TH1F* >(*itr, dirs_.at(*itr).make<TH1F>("mht", "", 501, -0.5, 500.5) ));
           hmet_.insert( std::pair< ObjectType, TH1F* >(*itr, dirs_.at(*itr).make<TH1F>("met", "", 501, -0.5, 500.5) ));
