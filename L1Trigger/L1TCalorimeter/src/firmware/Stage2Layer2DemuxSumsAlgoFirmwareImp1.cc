@@ -66,23 +66,23 @@ void l1t::Stage2Layer2DemuxSumsAlgoFirmwareImp1::processEvent(const std::vector<
   //   }
   
   // // Final MET calculation
-  // //  cordic_( metx , mety , metPhi , met );
+  // cordic_( metx , mety , metPhi , met );
 
   // // Final MHT calculation
-  // //  cordic_( mhtx , mhty , mhtPhi , mht );
+  // cordic_( mhtx , mhty , mhtPhi , mht );
 
   // // Make final collection
   // math::XYZTLorentzVector p4;
 
-  // //  l1t::EtSum etSumTotalEt(p4,l1t::EtSum::EtSumType::kTotalEt,et,0,0,0);
-  // //l1t::EtSum etSumMissingEt(p4,l1t::EtSum::EtSumType::kMissingEt,met,0,metPhi,0);
-  // //l1t::EtSum htSumht(p4,l1t::EtSum::EtSumType::kTotalHt,ht,0,0,0);
-  // //l1t::EtSum htSumMissingHt(p4,l1t::EtSum::EtSumType::kMissingHt,mht,0,mhtPhi,0);
+  // l1t::EtSum etSumTotalEt(p4,l1t::EtSum::EtSumType::kTotalEt,et,0,0,0);
+  // l1t::EtSum etSumMissingEt(p4,l1t::EtSum::EtSumType::kMissingEt,met,0,metPhi,0);
+  // l1t::EtSum htSumht(p4,l1t::EtSum::EtSumType::kTotalHt,ht,0,0,0);
+  // l1t::EtSum htSumMissingHt(p4,l1t::EtSum::EtSumType::kMissingHt,mht,0,mhtPhi,0);
 
-  // //outputSums.push_back(etSumTotalEt);
-  // //outputSums.push_back(etSumMissingEt);
-  // //outputSums.push_back(htSumht);
-  // //outputSums.push_back(htSumMissingHt);
+  // outputSums.push_back(etSumTotalEt);
+  // outputSums.push_back(etSumMissingEt);
+  // outputSums.push_back(htSumht);
+  // outputSums.push_back(htSumMissingHt);
 
   // Disable for now
   outputSums = inputSums;

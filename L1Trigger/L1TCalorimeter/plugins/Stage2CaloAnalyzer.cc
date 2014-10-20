@@ -328,11 +328,11 @@ namespace l1t {
               break;
               
             case l1t::EtSum::EtSumType::kTotalEtx:
-              hetx_.at(Sum)->Fill( itr->hwPt() );
+              hetx_.at(Sum)->Fill( static_cast<int>( itr->hwPt()<<12 ) >> 12 );
               break;
               
             case l1t::EtSum::EtSumType::kTotalEty:
-              hety_.at(Sum)->Fill( itr->hwPt() );
+              hety_.at(Sum)->Fill( static_cast<int>( itr->hwPt()<<12 ) >> 12 );
               break;
               
             case l1t::EtSum::EtSumType::kTotalHt:
@@ -340,11 +340,11 @@ namespace l1t {
               break;
               
             case l1t::EtSum::EtSumType::kTotalHtx:
-              hhtx_.at(Sum)->Fill( itr->hwPt() );
+              hhtx_.at(Sum)->Fill( static_cast<int>( itr->hwPt()<<12 ) >> 12 );
               break;
               
             case l1t::EtSum::EtSumType::kTotalHty:
-              hhty_.at(Sum)->Fill( itr->hwPt() );
+              hhty_.at(Sum)->Fill( static_cast<int>( itr->hwPt()<<12 ) >> 12 );
               break;
               
             case l1t::EtSum::EtSumType::kMissingEt:
