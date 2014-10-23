@@ -40,8 +40,8 @@ namespace l1t {
      int unsigned i = 0;
 
      // Loop over multiple BX and then number of jets filling jet collection
-     for (int bx=firstBX; bx<lastBX; bx++){
-       for (unsigned nJet=0; nJet < 12 && nJet < size; nJet++){
+     for (int bx=firstBX; bx<lastBX+1; bx++){
+       for (unsigned nJet=0; nJet < 6 && nJet < size; nJet++){
          uint32_t raw_data = pop(data,i); // pop advances the index i internally
 
          if (raw_data == 0)
@@ -53,7 +53,7 @@ namespace l1t {
          
          int abs_eta = (raw_data >> 11) & 0x7F;
          if ((raw_data >> 18) & 0x1) {
-           jet.setHwEta(-1 * abs_eta);
+           jet.setHwEta(-1 * (127-abs_eta));
          } else {
            jet.setHwEta(abs_eta);
          }

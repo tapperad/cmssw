@@ -16,15 +16,15 @@
 #include <algorithm>
 #include <math.h>
 
-bool operator > ( l1t::Jet& a, l1t::Jet& b )
-{
-  if ( a.hwPt() > b.hwPt() ){ 
-    return true;
-  } else {
-
-    return false;
-  }
-}
+//bool operator > ( l1t::Jet& a, l1t::Jet& b )
+//{
+//  if ( a.hwPt() > b.hwPt() ){ 
+//    return true;
+//  } else {
+//
+//    return false;
+//  }
+//}
 
 namespace{
   bool sortbypt(const l1t::Jet &a, const l1t::Jet &b) { return a.hwPt() > b.hwPt(); };

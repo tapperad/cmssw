@@ -134,7 +134,8 @@ namespace l1t {
 
        LogDebug("L1") << "block ID=" << block_id << " etasign=" << etasign;
 
-       jet.setHwEta(etasign*(raw_data & 0x3F));
+       //       jet.setHwEta(etasign*(raw_data & 0x3F));
+       jet.setHwEta(raw_data & 0x3F);
        jet.setHwPhi((raw_data >> 6) & 0x7F);
        jet.setHwPt((raw_data >> 13) & 0xFFFF);
          

@@ -14,14 +14,14 @@
 #include <vector>
 #include <algorithm>
 
-//bool operator > ( l1t::Jet& a, l1t::Jet& b )
-//{
-//  if ( a.hwPt() > b.hwPt() ){ 
-//    return true;
-//  } else {
-//    return false;
-//  }
-//}
+bool operator > ( l1t::Jet& a, l1t::Jet& b )
+{
+  if ( a.hwPt() > b.hwPt() ){ 
+    return true;
+  } else {
+    return false;
+  }
+}
 
 l1t::Stage2Layer2DemuxJetAlgoFirmwareImp1::Stage2Layer2DemuxJetAlgoFirmwareImp1(CaloParams* params) :
   params_(params)
@@ -47,7 +47,7 @@ void l1t::Stage2Layer2DemuxJetAlgoFirmwareImp1::processEvent(const std::vector<l
   std::vector<l1t::Jet>::iterator start(outputJets.begin());
   std::vector<l1t::Jet>::iterator end(outputJets.end());
 
-  //  BitonicSort< l1t::Jet >(down,start,end);
+  BitonicSort< l1t::Jet >(down,start,end);
 
   // Transform the eta and phi onto the ouput scales to GT 
   for (std::vector<l1t::Jet>::iterator jet = outputJets.begin(); jet != outputJets.end(); ++jet )
