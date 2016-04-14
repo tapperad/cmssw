@@ -49,6 +49,7 @@ class L1TStage2CaloLayer2 : public DQMEDAnalyzer {
   MonitorElement* stage2CaloLayer2CenJetRank_;
   MonitorElement* stage2CaloLayer2CenJetOcc_;
   MonitorElement* stage2CaloLayer2CenJetBxOcc_;
+  MonitorElement* stage2CaloLayer2CenJetQualBits_;
 
   MonitorElement* stage2CaloLayer2ForJetEtEtaPhi_;
   MonitorElement* stage2CaloLayer2ForJetEta_;
@@ -56,6 +57,9 @@ class L1TStage2CaloLayer2 : public DQMEDAnalyzer {
   MonitorElement* stage2CaloLayer2ForJetRank_;
   MonitorElement* stage2CaloLayer2ForJetOcc_;
   MonitorElement* stage2CaloLayer2ForJetBxOcc_;
+  MonitorElement* stage2CaloLayer2ForJetQualBits_;
+
+  MonitorElement* stage2CaloLayer2EGIsoBits_;
 
   MonitorElement* stage2CaloLayer2IsoEGEtEtaPhi_;
   MonitorElement* stage2CaloLayer2IsoEGEta_;
@@ -63,6 +67,7 @@ class L1TStage2CaloLayer2 : public DQMEDAnalyzer {
   MonitorElement* stage2CaloLayer2IsoEGRank_;
   MonitorElement* stage2CaloLayer2IsoEGOcc_;
   MonitorElement* stage2CaloLayer2IsoEGBxOcc_;
+  MonitorElement* stage2CaloLayer2IsoEGQualBits_;
 
   MonitorElement* stage2CaloLayer2NonIsoEGEtEtaPhi_;
   MonitorElement* stage2CaloLayer2NonIsoEGEta_;
@@ -70,6 +75,9 @@ class L1TStage2CaloLayer2 : public DQMEDAnalyzer {
   MonitorElement* stage2CaloLayer2NonIsoEGRank_;
   MonitorElement* stage2CaloLayer2NonIsoEGOcc_;
   MonitorElement* stage2CaloLayer2NonIsoEGBxOcc_;
+  MonitorElement* stage2CaloLayer2NonIsoEGQualBits_;
+
+  MonitorElement* stage2CaloLayer2TauIsoBits_;
 
   MonitorElement* stage2CaloLayer2IsoTauEtEtaPhi_;
   MonitorElement* stage2CaloLayer2IsoTauEta_;
@@ -77,6 +85,7 @@ class L1TStage2CaloLayer2 : public DQMEDAnalyzer {
   MonitorElement* stage2CaloLayer2IsoTauRank_;
   MonitorElement* stage2CaloLayer2IsoTauOcc_;
   MonitorElement* stage2CaloLayer2IsoTauBxOcc_;
+  MonitorElement* stage2CaloLayer2IsoTauQualBits_;
 
   MonitorElement* stage2CaloLayer2TauEtEtaPhi_;
   MonitorElement* stage2CaloLayer2TauEta_;
@@ -84,18 +93,15 @@ class L1TStage2CaloLayer2 : public DQMEDAnalyzer {
   MonitorElement* stage2CaloLayer2TauRank_;
   MonitorElement* stage2CaloLayer2TauOcc_;
   MonitorElement* stage2CaloLayer2TauBxOcc_;
+  MonitorElement* stage2CaloLayer2TauQualBits_;
 
   MonitorElement* stage2CaloLayer2EtSumBxOcc_;
   MonitorElement* stage2CaloLayer2METRank_;
   MonitorElement* stage2CaloLayer2METPhi_;
   MonitorElement* stage2CaloLayer2ETTRank_;
-  MonitorElement* stage2CaloLayer2ETTPhi_;
   MonitorElement* stage2CaloLayer2MHTRank_;
   MonitorElement* stage2CaloLayer2MHTPhi_;
-  MonitorElement* stage2CaloLayer2MHTEta_;
   MonitorElement* stage2CaloLayer2HTTRank_;
-  MonitorElement* stage2CaloLayer2HTTPhi_;
-  MonitorElement* stage2CaloLayer2HTTEta_;
 };
 
 #endif 

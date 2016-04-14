@@ -24,6 +24,7 @@ void L1TStage2CaloLayer2::bookHistograms(DQMStore::IBooker &ibooker, edm::Run co
   stage2CaloLayer2CenJetRank_ = ibooker.book1D("CenJetsRank", "CENTRAL JET E_{T}", 2048, -0.5, 2047.5);
   stage2CaloLayer2CenJetOcc_ = ibooker.book2D("CenJetsOcc", "CENTRAL JET OCCUPANCY", 229, -114.5, 114.5, 144, -0.5, 143.5);
   stage2CaloLayer2CenJetBxOcc_ = ibooker.book2D("CenJetsBxOcc", "CENTRAL JET BX OCCUPANCY", 5,-2.5, 2.5, 512, -0.5, 2047.5);
+  stage2CaloLayer2CenJetQualBits_ = ibooker.book1D("CenJetsQualBits", "CENTRAL JET QUALITY BITS", 2048, -0.5, 2047.5);
 
   //forward jet
   stage2CaloLayer2ForJetEtEtaPhi_ = ibooker.book2D("ForJetsEtEtaPhi", "FORWARD JET E_{T} ETA PHI", 229, -114.5, 114.5, 144, -0.5, 143.5);
@@ -196,15 +197,11 @@ void L1TStage2CaloLayer2::analyze(const edm::Event & e, const edm::EventSetup & 
 	  stage2CaloLayer2METPhi_->Fill(itEtSum->hwPhi());
 	} else if(l1t::EtSum::EtSumType::kTotalEt == itEtSum->getType()){
 	  stage2CaloLayer2ETTRank_->Fill(itEtSum->hwPt());
-	  stage2CaloLayer2ETTPhi_->Fill(itEtSum->hwPhi());
 	} else if(l1t::EtSum::EtSumType::kMissingHt == itEtSum->getType()){
 	  stage2CaloLayer2MHTRank_->Fill(itEtSum->hwPt());
 	  stage2CaloLayer2MHTPhi_->Fill(itEtSum->hwPhi());
-	  stage2CaloLayer2MHTEta_->Fill(itEtSum->hwEta());
 	} else{
 	  stage2CaloLayer2HTTRank_->Fill(itEtSum->hwPt());
-	  stage2CaloLayer2HTTPhi_->Fill(itEtSum->hwPhi());
-	  stage2CaloLayer2HTTEta_->Fill(itEtSum->hwEta());
 	}
       }
     }
