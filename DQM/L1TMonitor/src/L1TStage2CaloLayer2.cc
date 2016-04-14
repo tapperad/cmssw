@@ -69,14 +69,10 @@ void L1TStage2CaloLayer2::bookHistograms(DQMStore::IBooker &ibooker, edm::Run co
   stage2CaloLayer2EtSumBxOcc_ = ibooker.book2D("EtSumBxOcc", "EtSum BX OCCUPANCY",  5,-2.5, 2.5, 1024, -0.5, 4095.5);
   stage2CaloLayer2METRank_ = ibooker.book1D("METRank", "MET E_{T}", 4096, -0.5, 4095.5);
   stage2CaloLayer2METPhi_ = ibooker.book1D("METPhi", "MET Phi", 144, -0.5, 143.5);
-  stage2CaloLayer2ETTRank_ = ibooker.book1D("ETTPhi", "ETT E_{T}", 4096, -0.5, 4095.5);
-  stage2CaloLayer2ETTPhi_ = ibooker.book1D("ETTPhi","ETT Phi", 144, -0.5, 143.5);
+  stage2CaloLayer2ETTRank_ = ibooker.book1D("ETTRank", "ETT E_{T}", 4096, -0.5, 4095.5);
   stage2CaloLayer2MHTRank_ = ibooker.book1D("MHTRank", "MHT E_{T}", 4096, -0.5, 4095.5);
   stage2CaloLayer2MHTPhi_ = ibooker.book1D("MHTPhi", "MHT Phi", 144, -0.5, 143.5);
-  stage2CaloLayer2MHTEta_ = ibooker.book1D("MHTEta", "MHT Eta", 229, -114.5, 114.5);
   stage2CaloLayer2HTTRank_ = ibooker.book1D("HTTRank", "HTT E_{T}", 4096, -0.5, 4095.5);
-  stage2CaloLayer2HTTPhi_ = ibooker.book1D("HTTPhi", "HTT Phi", 144, -0.5, 143.5);
-  stage2CaloLayer2HTTEta_ = ibooker.book1D("HTTEta", "HTT Eta", 229, -114.5, 114.5);
   
 }
 
@@ -92,18 +88,16 @@ void L1TStage2CaloLayer2::analyze(const edm::Event & e, const edm::EventSetup & 
 
   for(int itBX=Jet->getFirstBX(); itBX<=Jet->getLastBX(); ++itBX){
     for(l1t::JetBxCollection::const_iterator itJet = Jet->begin(itBX); itJet != Jet->end(itBX); ++itJet){
-      //const bool forward = ((itJet->hwQual() & 0x2) != 0);
       const bool forward = (itJet->hwEta()>68 || itJet->hwEta()<(-68));
-      //bool forward = false;
       if(forward){
 	stage2CaloLayer2ForJetBxOcc_->Fill(itBX, itJet->hwPt());
 	if(itBX == 0 ){
 	  stage2CaloLayer2ForJetRank_->Fill(itJet->hwPt());
-	  stage2CaloLayer2ForJetPhi_->Fill(itJet->hwPhi());
-	  stage2CaloLayer2ForJetEta_->Fill(itJet->hwEta());
 	  if (itJet->hwPt() !=0 ){
 	    stage2CaloLayer2ForJetEtEtaPhi_->Fill(itJet->hwEta(), itJet->hwPhi(), itJet->hwPt());
 	    stage2CaloLayer2ForJetOcc_->Fill(itJet->hwEta(), itJet->hwPhi());
+            stage2CaloLayer2ForJetPhi_->Fill(itJet->hwPhi());
+            stage2CaloLayer2ForJetEta_->Fill(itJet->hwEta());
 	  }
 	}
       }
@@ -111,11 +105,11 @@ void L1TStage2CaloLayer2::analyze(const edm::Event & e, const edm::EventSetup & 
 	stage2CaloLayer2CenJetBxOcc_->Fill(itBX, itJet->hwPt());
 	if(itBX == 0 ){
 	  stage2CaloLayer2CenJetRank_->Fill(itJet->hwPt());
-	  stage2CaloLayer2CenJetPhi_->Fill(itJet->hwPhi());
-	  stage2CaloLayer2CenJetEta_->Fill(itJet->hwEta());
 	  if (itJet->hwPt() !=0 ){
 	    stage2CaloLayer2CenJetEtEtaPhi_->Fill(itJet->hwEta(), itJet->hwPhi(), itJet->hwPt());
 	    stage2CaloLayer2CenJetOcc_->Fill(itJet->hwEta(), itJet->hwPhi());
+            stage2CaloLayer2CenJetPhi_->Fill(itJet->hwPhi());
+            stage2CaloLayer2CenJetEta_->Fill(itJet->hwEta());
 	  }
 	}
       }
@@ -133,11 +127,11 @@ void L1TStage2CaloLayer2::analyze(const edm::Event & e, const edm::EventSetup & 
         stage2CaloLayer2IsoEGBxOcc_->Fill(itBX, itEG->hwPt());
 	if(itBX == 0 ){
 	  stage2CaloLayer2IsoEGRank_->Fill(itEG->hwPt());
-	  stage2CaloLayer2IsoEGPhi_->Fill(itEG->hwPhi());
-	  stage2CaloLayer2IsoEGEta_->Fill(itEG->hwEta());
 	  if(itEG->hwPt() !=0 ){
 	    stage2CaloLayer2IsoEGEtEtaPhi_->Fill(itEG->hwEta(), itEG->hwPhi(), itEG->hwPt());
 	    stage2CaloLayer2IsoEGOcc_->Fill(itEG->hwEta(), itEG->hwPhi());
+            stage2CaloLayer2IsoEGPhi_->Fill(itEG->hwPhi());
+            stage2CaloLayer2IsoEGEta_->Fill(itEG->hwEta());
 	  }
 	}
       }
@@ -145,11 +139,11 @@ void L1TStage2CaloLayer2::analyze(const edm::Event & e, const edm::EventSetup & 
 	stage2CaloLayer2NonIsoEGBxOcc_->Fill(itBX, itEG->hwPt());
 	if(itBX == 0 ){
 	  stage2CaloLayer2NonIsoEGRank_->Fill(itEG->hwPt());
-	  stage2CaloLayer2NonIsoEGPhi_->Fill(itEG->hwPhi());
-	  stage2CaloLayer2NonIsoEGEta_->Fill(itEG->hwEta());
 	  if(itEG->hwPt() !=0 ){
 	    stage2CaloLayer2NonIsoEGEtEtaPhi_->Fill(itEG->hwEta(), itEG->hwPhi(), itEG->hwPt());
 	    stage2CaloLayer2NonIsoEGOcc_->Fill(itEG->hwEta(), itEG->hwPhi());
+            stage2CaloLayer2NonIsoEGPhi_->Fill(itEG->hwPhi());
+            stage2CaloLayer2NonIsoEGEta_->Fill(itEG->hwEta());
 	  }
 	}
       }
@@ -166,11 +160,11 @@ void L1TStage2CaloLayer2::analyze(const edm::Event & e, const edm::EventSetup & 
         stage2CaloLayer2IsoTauBxOcc_->Fill(itBX, itTau->hwPt());
 	if(itBX == 0 ){
 	  stage2CaloLayer2IsoTauRank_->Fill(itTau->hwPt());
-	  stage2CaloLayer2IsoTauPhi_->Fill(itTau->hwPhi());
-	  stage2CaloLayer2IsoTauEta_->Fill(itTau->hwEta());
 	  if(itTau->hwPt() !=0 ){
 	    stage2CaloLayer2IsoTauEtEtaPhi_->Fill(itTau->hwEta(), itTau->hwPhi(), itTau->hwPt());
 	    stage2CaloLayer2IsoTauOcc_->Fill(itTau->hwEta(), itTau->hwPhi());
+            stage2CaloLayer2IsoTauPhi_->Fill(itTau->hwPhi());
+            stage2CaloLayer2IsoTauEta_->Fill(itTau->hwEta());
 	  }
 	}
       }
@@ -178,11 +172,11 @@ void L1TStage2CaloLayer2::analyze(const edm::Event & e, const edm::EventSetup & 
 	stage2CaloLayer2TauBxOcc_->Fill(itBX, itTau->hwPt());
 	if(itBX == 0 ){
 	  stage2CaloLayer2TauRank_->Fill(itTau->hwPt());
-	  stage2CaloLayer2TauPhi_->Fill(itTau->hwPhi());
-	  stage2CaloLayer2TauEta_->Fill(itTau->hwEta());
 	  if(itTau->hwPt() !=0 ){
 	    stage2CaloLayer2TauEtEtaPhi_->Fill(itTau->hwEta(), itTau->hwPhi(), itTau->hwPt());
 	    stage2CaloLayer2TauOcc_->Fill(itTau->hwEta(), itTau->hwPhi());
+            stage2CaloLayer2TauPhi_->Fill(itTau->hwPhi());
+            stage2CaloLayer2TauEta_->Fill(itTau->hwEta());
 	  }
 	}
       }
