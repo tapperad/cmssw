@@ -24,7 +24,7 @@ void L1TStage2CaloLayer2::bookHistograms(DQMStore::IBooker &ibooker, edm::Run co
   stage2CaloLayer2CenJetRank_ = ibooker.book1D("CenJetsRank", "CENTRAL JET E_{T}", 2048, -0.5, 2047.5);
   stage2CaloLayer2CenJetOcc_ = ibooker.book2D("CenJetsOcc", "CENTRAL JET OCCUPANCY", 229, -114.5, 114.5, 144, -0.5, 143.5);
   stage2CaloLayer2CenJetBxOcc_ = ibooker.book2D("CenJetsBxOcc", "CENTRAL JET BX OCCUPANCY", 5,-2.5, 2.5, 512, -0.5, 2047.5);
-  stage2CaloLayer2CenJetQualBits_ = ibooker.book1D("CenJetsQualBits", "CENTRAL JET QUALITY BITS", 2048, -0.5, 2047.5);
+  stage2CaloLayer2CenJetQual_ = ibooker.book1D("CenJetsQual", "CENTRAL JET QUALITY", 32, -0.5, 31.5);
 
   //forward jet
   stage2CaloLayer2ForJetEtEtaPhi_ = ibooker.book2D("ForJetsEtEtaPhi", "FORWARD JET E_{T} ETA PHI", 229, -114.5, 114.5, 144, -0.5, 143.5);
@@ -33,14 +33,17 @@ void L1TStage2CaloLayer2::bookHistograms(DQMStore::IBooker &ibooker, edm::Run co
   stage2CaloLayer2ForJetRank_ = ibooker.book1D("ForJetsRank", "FORWARD JET E_{T}", 2048, -0.5, 2047.5);
   stage2CaloLayer2ForJetOcc_ = ibooker.book2D("ForJetsOcc", "FORWARD JET OCCUPANCy", 229, -114.5, 114.5, 144, -0.5, 143.5);
   stage2CaloLayer2ForJetBxOcc_ = ibooker.book2D("ForJetsBxOcc", "FORWARD JET BX OCCUPANCY", 5,-2.5, 2.5, 512, -0.5, 2047.5);
+  stage2CaloLayer2ForJetQual_ = ibooker.book1D("ForJetsQual", "FORWARD JET QUALITY", 32, -0.5, 31.5);
 
   //IsoEG
+  stage2CaloLayer2EGIso_ = ibooker.book1D("EGIso", "EG ISO", 4, -0.5, 3.5);
   stage2CaloLayer2IsoEGEtEtaPhi_ = ibooker.book2D("IsoEGsEtEtaPhi", "ISO EG E_{T} ETA PHI", 229, -114.5, 114.5, 144, -0.5, 143.5);
   stage2CaloLayer2IsoEGEta_ = ibooker.book1D("IsoEGsEta", "ISO EG ETA", 229, -114.5, 114.5);
   stage2CaloLayer2IsoEGPhi_ = ibooker.book1D("IsoEGsPhi", "ISO EG PHI", 144, -0.5, 143.5);
   stage2CaloLayer2IsoEGRank_ = ibooker.book1D("IsoEGsRank", "ISO EG E_{T}", 512, -0.5, 511.5);
   stage2CaloLayer2IsoEGOcc_ = ibooker.book2D("IsoEGsOcc", "ISO EG OCCUPANCY", 229, -114.5, 114.5, 144, -0.5, 143.5);
   stage2CaloLayer2IsoEGBxOcc_ = ibooker.book2D("IsoEGsBxOcc", "ISO EG BX OCCUPANCY",  5,-2.5, 2.5, 128, -0.5, 511.5);
+  stage2CaloLayer2IsoEGQual_ = ibooker.book1D("IsoEGsQual", "ISO EG QUALITY", 32, -0.5, 31.5);
 
   //NonIsoEG
   stage2CaloLayer2NonIsoEGEtEtaPhi_ = ibooker.book2D("NonIsoEGsEtEtaPhi", "NonISO EG E_{T} ETA PHI", 229, -114.5, 114.5, 144, -0.5, 143.5);
@@ -49,22 +52,26 @@ void L1TStage2CaloLayer2::bookHistograms(DQMStore::IBooker &ibooker, edm::Run co
   stage2CaloLayer2NonIsoEGRank_ = ibooker.book1D("NonIsoEGsRank", "NonISO EG E_{T}", 512, -0.5, 511.5);
   stage2CaloLayer2NonIsoEGOcc_ = ibooker.book2D("NonIsoEGsOcc", "NonISO EG OCCUPANCY", 229, -114.5, 114.5, 144, -0.5, 143.5);
   stage2CaloLayer2NonIsoEGBxOcc_ = ibooker.book2D("NonIsoEGsBxOcc", "NonISO EG BX OCCUPANCY", 5,-2.5, 2.5, 128, -0.5, 511.5);
+  stage2CaloLayer2NonIsoEGQual_ = ibooker.book1D("NonIsoEGsQual", "NonISO EG QUALITY", 32, -0.5, 31.5);
 
   //IsoTau
+  stage2CaloLayer2TauIso_ = ibooker.book1D("TauIso", "Tau ISO", 4, -0.5, 3.5);
   stage2CaloLayer2IsoTauEtEtaPhi_ = ibooker.book2D("IsoTausEtEtaPhi", "ISO Tau E_{T} ETA PHI", 229, -114.5, 114.5, 144, -0.5, 143.5);
   stage2CaloLayer2IsoTauEta_ = ibooker.book1D("IsoTausEta", "ISO Tau ETA", 229, -114.5, 114.5);
   stage2CaloLayer2IsoTauPhi_ = ibooker.book1D("IsoTausPhi", "ISO Tau PHI", 144, -0.5, 143.5);
   stage2CaloLayer2IsoTauRank_ = ibooker.book1D("IsoTausRank", "ISO Tau E_{T}", 512, -0.5, 511.5);
   stage2CaloLayer2IsoTauOcc_ = ibooker.book2D("IsoTausOcc", "ISO Tau OCCUPANCY", 229, -114.5, 114.5, 144, -0.5, 143.5);
   stage2CaloLayer2IsoTauBxOcc_ = ibooker.book2D("IsoTausBxOcc", "ISO Tau BX OCCUPANCY", 5,-2.5, 2.5, 128, -0.5, 511.5);
+  stage2CaloLayer2IsoTauQual_ = ibooker.book1D("IsoTausQual", "ISO Tau QUALITY", 32, -0.5, 31.5);
 
-  //rlxTau
+  //NonIsoTau
   stage2CaloLayer2TauEtEtaPhi_ = ibooker.book2D("TausEtEtaPhi", "Tau E_{T} ETA PHI", 229, -114.5, 114.5, 144, -0.5, 143.5);
-  stage2CaloLayer2TauEta_ = ibooker.book1D("TausEta", "Tau ETA", 229, -114.5, 114.5);
-  stage2CaloLayer2TauPhi_ = ibooker.book1D("TausPhi", "Tau PHI", 144, -0.5, 143.5);
-  stage2CaloLayer2TauRank_ = ibooker.book1D("TausRank", "Tau E_{T}", 512, -0.5, 511.5);
-  stage2CaloLayer2TauOcc_ = ibooker.book2D("TausOcc", "Tau OCCUPANCY", 229, -114.5, 114.5, 144, -0.5, 143.5);
-  stage2CaloLayer2TauBxOcc_ = ibooker.book2D("TausBxOcc", "Tau BX OCCUPANCY", 5,-2.5, 2.5, 128, -0.5, 511.5);
+  stage2CaloLayer2TauEta_ = ibooker.book1D("TausEta", "NonISO Tau ETA", 229, -114.5, 114.5);
+  stage2CaloLayer2TauPhi_ = ibooker.book1D("TausPhi", "NonISO Tau PHI", 144, -0.5, 143.5);
+  stage2CaloLayer2TauRank_ = ibooker.book1D("TausRank", "NonISO Tau E_{T}", 512, -0.5, 511.5);
+  stage2CaloLayer2TauOcc_ = ibooker.book2D("TausOcc", "NonISO Tau OCCUPANCY", 229, -114.5, 114.5, 144, -0.5, 143.5);
+  stage2CaloLayer2TauBxOcc_ = ibooker.book2D("TausBxOcc", "NonISO Tau BX OCCUPANCY", 5,-2.5, 2.5, 128, -0.5, 511.5);
+  stage2CaloLayer2TauQual_ = ibooker.book1D("TausQual", "NonISO Tau QUALITY", 32, -0.5, 31.5);
 
   //EtSums
   stage2CaloLayer2EtSumBxOcc_ = ibooker.book2D("EtSumBxOcc", "EtSum BX OCCUPANCY",  5,-2.5, 2.5, 1024, -0.5, 4095.5);
@@ -99,6 +106,7 @@ void L1TStage2CaloLayer2::analyze(const edm::Event & e, const edm::EventSetup & 
 	    stage2CaloLayer2ForJetOcc_->Fill(itJet->hwEta(), itJet->hwPhi());
             stage2CaloLayer2ForJetPhi_->Fill(itJet->hwPhi());
             stage2CaloLayer2ForJetEta_->Fill(itJet->hwEta());
+            stage2CaloLayer2ForJetQual_->Fill(itJet->hwQual());
 	  }
 	}
       }
@@ -111,6 +119,7 @@ void L1TStage2CaloLayer2::analyze(const edm::Event & e, const edm::EventSetup & 
 	    stage2CaloLayer2CenJetOcc_->Fill(itJet->hwEta(), itJet->hwPhi());
             stage2CaloLayer2CenJetPhi_->Fill(itJet->hwPhi());
             stage2CaloLayer2CenJetEta_->Fill(itJet->hwEta());
+            stage2CaloLayer2CenJetQual_->Fill(itJet->hwQual());
 	  }
 	}
       }
@@ -133,6 +142,8 @@ void L1TStage2CaloLayer2::analyze(const edm::Event & e, const edm::EventSetup & 
 	    stage2CaloLayer2IsoEGOcc_->Fill(itEG->hwEta(), itEG->hwPhi());
             stage2CaloLayer2IsoEGPhi_->Fill(itEG->hwPhi());
             stage2CaloLayer2IsoEGEta_->Fill(itEG->hwEta());
+            stage2CaloLayer2IsoEGQual_->Fill(itEG->hwQual());
+            stage2CaloLayer2EGIso_->Fill(itEG->hwIso());
 	  }
 	}
       }
@@ -145,6 +156,8 @@ void L1TStage2CaloLayer2::analyze(const edm::Event & e, const edm::EventSetup & 
 	    stage2CaloLayer2NonIsoEGOcc_->Fill(itEG->hwEta(), itEG->hwPhi());
             stage2CaloLayer2NonIsoEGPhi_->Fill(itEG->hwPhi());
             stage2CaloLayer2NonIsoEGEta_->Fill(itEG->hwEta());
+            stage2CaloLayer2NonIsoEGQual_->Fill(itEG->hwQual());
+            stage2CaloLayer2EGIso_->Fill(itEG->hwIso());
 	  }
 	}
       }
@@ -166,6 +179,8 @@ void L1TStage2CaloLayer2::analyze(const edm::Event & e, const edm::EventSetup & 
 	    stage2CaloLayer2IsoTauOcc_->Fill(itTau->hwEta(), itTau->hwPhi());
             stage2CaloLayer2IsoTauPhi_->Fill(itTau->hwPhi());
             stage2CaloLayer2IsoTauEta_->Fill(itTau->hwEta());
+            stage2CaloLayer2IsoTauQual_->Fill(itTau->hwQual());
+            stage2CaloLayer2TauIso_->Fill(itTau->hwIso());
 	  }
 	}
       }
@@ -178,6 +193,8 @@ void L1TStage2CaloLayer2::analyze(const edm::Event & e, const edm::EventSetup & 
 	    stage2CaloLayer2TauOcc_->Fill(itTau->hwEta(), itTau->hwPhi());
             stage2CaloLayer2TauPhi_->Fill(itTau->hwPhi());
             stage2CaloLayer2TauEta_->Fill(itTau->hwEta());
+            stage2CaloLayer2TauQual_->Fill(itTau->hwQual());
+            stage2CaloLayer2TauIso_->Fill(itTau->hwIso());
 	  }
 	}
       }
